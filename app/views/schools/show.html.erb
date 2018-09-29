@@ -21,4 +21,6 @@
 <% end %>
 <br>
 <%= link_to 'Edit', edit_school_path(@school) %> |
-<%= link_to 'Back', schools_path %>
+<%= link_to 'Back', schools_path %> |
+<%= link_to 'Student Posts', school_view_student_post_path(@school) %> |
+<%= link_to 'Teacher Posts', school_view_teacher_post_path(@school) %> 

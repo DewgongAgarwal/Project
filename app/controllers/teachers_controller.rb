@@ -26,15 +26,39 @@ class TeachersController < ApplicationController
   # POST /teachers.json
   def create
     @teacher = Teacher.new(teacher_params)
-
+    @stud = Student.where(email: @teacher.email)
+    @teach = Teacher.where(email: @teacher.email)
+    @sch = School.where(email: @teacher.email)
     respond_to do |format|
-      if @teacher.save
-        format.html { redirect_to @teacher, notice: 'Teacher was successfully created.' }
-        format.json { render :show, status: :created, location: @teacher }
-      else
-        format.html { render :new }
+    if not @teacher.firstname
+        format.html { redirect_to teachers_path, notice: 'First Name cannot be empty' }
         format.json { render json: @teacher.errors, status: :unprocessable_entity }
-      end
+    elsif not @teacher.lastname
+        format.html { redirect_to teachers_path, notice: 'Last Name cannot be empty' }
+        format.json { render json: @teacher.errors, status: :unprocessable_entity }
+    elsif not @teacher.email
+        format.html { redirect_to teachers_path, notice: 'Email cannot be empty' }
+        format.json { render json: @teacher.errors, status: :unprocessable_entity }
+    elsif not @teacher.password
+        format.html { redirect_to teachers_path, notice: 'Password cannot be empty' }
+        format.json { render json: @teacher.errors, status: :unprocessable_entity }
+    elsif not @teacher.school
+        format.html { redirect_to teachers_path, notice: 'Select One School' }
+        format.json { render json: @teacher.errors, status: :unprocessable_entity }
+    else
+        if @stud.length == 0 and @teach.length == 0 and @sch.length == 0
+            if @teacher.save
+                format.html { redirect_to @teacher, notice: 'Teacher was successfully created.' }
+                format.json { render :show, status: :created, location: @teacher }
+                else
+                format.html { render :new }
+                format.json { render json: @teacher.errors, status: :unprocessable_entity }
+            end
+            else
+            format.html { redirect_to teachers_path, notice: 'User Exists' }
+            format.json { render json: @teacher.errors, status: :unprocessable_entity }
+            end
+    end
     end
   end
 
@@ -43,7 +67,7 @@ class TeachersController < ApplicationController
   def update
     respond_to do |format|
       if @teacher.update(teacher_params)
-        format.html { redirect_to @teacher, notice: 'Teacher was successfully updated.' }
+        format.html { redirect_to @teacher, notice: 'Your Account was successfully updated.' }
         format.json { render :show, status: :ok, location: @teacher }
       else
         format.html { render :edit }
@@ -57,7 +81,7 @@ class TeachersController < ApplicationController
   def destroy
     @teacher.destroy
     respond_to do |format|
-      format.html { redirect_to teachers_url, notice: 'Teacher was successfully destroyed.' }
+      format.html { redirect_to teachers_url, notice: 'Teacher Account was successfully destroyed.' }
       format.json { head :no_content }
     end
   end

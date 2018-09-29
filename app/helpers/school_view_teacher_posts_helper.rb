@@ -1,0 +1,2 @@
+module SchoolViewTeacherPostsHelper
+end

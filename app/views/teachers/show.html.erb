@@ -27,4 +27,6 @@
 
 </p>
 <%= link_to 'Edit', edit_teacher_path(@teacher) %> |
-<%= link_to 'Back', teacherlogout_path %>
+<%= link_to 'Back', teacherlogout_path %> |
+<%= link_to 'My Posts', teacher_post_path(@teacher) %> |
+<%= link_to 'Student Posts', teacher_view_student_post_path(@teacher) %>

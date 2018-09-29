@@ -1,0 +1,2 @@
+class TType < ApplicationRecord
+end

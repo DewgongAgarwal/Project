@@ -26,15 +26,40 @@ class StudentsController < ApplicationController
   # POST /students.json
   def create
     @student = Student.new(student_params)
-
+    @stud = Student.where(email: @student.email)
+    @teach = Teacher.where(email: @student.email)
+    @sch = School.where(email: @student.email)
     respond_to do |format|
-      if @student.save
-        format.html { redirect_to @student, notice: 'Student was successfully created.' }
-        format.json { render :show, status: :created, location: @student }
-      else
-        format.html { render :new }
-        format.json { render json: @student.errors, status: :unprocessable_entity }
-      end
+        if not @student.firstname
+            format.html { redirect_to students_path, notice: 'First Name cannot be empty' }
+            format.json { render json: @student.errors, status: :unprocessable_entity }
+            elsif not @student.lastname
+            format.html { redirect_to students_path, notice: 'Last Name cannot be empty' }
+            format.json { render json: @student.errors, status: :unprocessable_entity }
+            elsif not @student.email
+            format.html { redirect_to students_path, notice: 'Email cannot be empty' }
+            format.json { render json: @student.errors, status: :unprocessable_entity }
+            elsif not @student.password
+            format.html { redirect_to students_path, notice: 'Password cannot be empty' }
+            format.json { render json: @student.errors, status: :unprocessable_entity }
+            elsif not @student.school
+            format.html { redirect_to students_path, notice: 'Select One School' }
+            format.json { render json: @student.errors, status: :unprocessable_entity }
+            else
+                if @stud.length == 0 and @teach.length == 0 && @sch.length == 0
+                    if @student.save
+                        format.html { redirect_to @student, notice: 'Student was successfully created.' }
+                        format.json { render :show, status: :created, location: @student }
+                        else
+                        format.html { render :new }
+                        format.json { render json: @student.errors, status: :unprocessable_entity }
+                    end
+                    else
+                    format.html { redirect_to students_path, notice: 'User Exists' }
+                    format.json { render json: @student.errors, status: :unprocessable_entity }
+      
+                end
+            end
     end
   end
 

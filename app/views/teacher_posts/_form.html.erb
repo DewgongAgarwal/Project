@@ -1,0 +1,32 @@
+<%= form_with(model: teacher_post, local: true) do |form| %>
+  <% if teacher_post.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(teacher_post.errors.count, "error") %> prohibited this teacher_post from being saved:</h2>
+
+      <ul>
+      <% teacher_post.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <%= form.hidden_field :teacher_id, value: session[:user_id] %>
+   <%= form.hidden_field :category, value: @category_id.to_i %>
+<% if @subcategory %>
+  <div class="field">
+    	<%= form.label :subcategory %>
+    	<%= form.select :subcategory, @subcategory.collect {|x| [x.name,x.id]}, {:include_blank => 'Select One'}%>
+  	</div>
+  <% end %>
+  
+	<div class="field">
+    <%= form.label :data %>
+    <%= form.text_area :data %>
+  </div>
+
+	<%= form.hidden_field :status, value: 2 %>
+	
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

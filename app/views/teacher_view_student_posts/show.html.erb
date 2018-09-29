@@ -1,0 +1,65 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Student Posts</h1>
+
+<table>
+	<% header = "Related: " %>
+	<% @students.each do |student| %>
+	<tr><td><h4><%=student.firstname%></h4></td> <td><h4><%=student.lastname%></h4></td></tr>
+		<% posts = Post.where(stud_id: student.id, category: [4,5,6,7,8], status: 2)%>
+		<% if posts.length == 0 %>
+			<td>No Posts</td>
+
+		<%else%>
+		<% posts.each do |post| %>
+		<%category = Category.find(post.category).name%>
+		<tr><td><%= category%></td>
+		<% case post.category %>
+			<%when 4%>
+				<%subcategory = Education.find(post.subcategory).name %>
+			<%when  5 %>
+				<%subcategory = Testing.find(post.subcategory).name %>
+			<% when 6 %>
+				<%subcategory = Activity.find(post.subcategory).name %>
+			<% else %>
+				<%subcategory = nil %>
+		<%end%>
+		<td><%= subcategory %></td>
+		<td><%= post.data %> </td>
+		<td><%= link_to "Verify"%></td>
+		<td><%= link_to "Reject"%></td>
+		</tr>
+		<% if post.types1 %>
+			<% related_posts = Post.where(stud_id: student.id, category: post.category, status: [2,3,4], types1: post.types1)%>
+			<%if related_posts.length != 0 %>
+				<td><h5><%= header %></h5></td>
+				<% related_posts.each do |relpost|%>
+				<% if relpost.data != post.data%>
+				<tr><td></td>
+				<% case post.category %>
+				<%when 4%>
+					<%relsubcategory = Education.find(relpost.subcategory).name %>
+				<%when  5 %>
+					<%relsubcategory = Testing.find(relpost.subcategory).name %>
+				<% when 6 %>
+					<%relsubcategory = Activity.find(relpost.subcategory).name %>
+				<% else %>
+					<%relsubcategory = nil %>
+				<%end%>
+				<td><%= relsubcategory%></td>
+				<td><%= relpost.data %></td>
+				<td><%= @status.find(relpost.status).name %></td>
+				</tr>
+				
+				<%end%>
+			<% end %>
+
+		<%end%>
+		<% end %>
+		<tr height = 20px></tr>
+		<td>--------</td>
+		<tr height = 20px></tr>
+		<%end%>
+	<%end%>
+	<%= link_to "Back", teacher_path(@teacher) %>
+</table>

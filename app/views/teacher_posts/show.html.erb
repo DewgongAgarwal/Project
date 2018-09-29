@@ -1,0 +1,45 @@
+<p id="notice"><%= notice %></p>
+
+<% @categories.each do |ca| %>
+<br>
+
+<h3><%= ca.name %></h3>
+<%= link_to 'New Post', teacher_post_new_path(ca) %>
+<br><br>
+<% case ca.id %>
+<% when 1%>
+
+	<% @post = TeacherPost.where(teacher_id: @teacher, Category: 1)%>
+	<% if @post.length == 0 %>
+		<%= "Not Posted" %>
+	<% else%>
+		<%= @post[0].data %>
+		<% status = Status.where(id: @post[0].status) %>
+		<%= status %>
+	<%end%>
+
+	<br><br>
+
+<% when 2 %>
+<table>
+	<% @profile.each do |prof| %> 
+	<tr>
+		<% @post = TeacherPost.where(teacher_id: @teacher, Category: 2, Subcategory: prof.id)%>
+		<td><%= prof.name %></td>
+		<% if @post.length == 0 %>
+			<td> <%= "Not Posted" %> </td>
+		<% else %>
+			<td><%= @post[0].data %></td>
+			<% status = Status.where(id: @post[0].status) %>
+			<td><%= status[0].name %></td>
+		 	
+		<% end %>
+			</tr>
+			<% end %>
+			
+		</table>
+			<br><br>
+	<br><br>
+	<% end %>
+<% end %>
+<%= link_to 'Back', teacher_path(session[:user_id]) %>

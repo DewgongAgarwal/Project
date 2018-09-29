@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Teacher Posts</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Teacher</th>
+      <th>Data</th>
+      <th>Subcategory</th>
+      <th>Status</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @teacher_posts.each do |teacher_post| %>
+      <tr>
+        <td><%= teacher_post.teacher_id %></td>
+        <td><%= teacher_post.data %></td>
+        <td><%= teacher_post.subcategory %></td>
+        <td><%= teacher_post.status %></td>
+        <td><%= link_to 'Show', teacher_post %></td>
+        <td><%= link_to 'Edit', edit_teacher_post_path(teacher_post) %></td>
+        <td><%= link_to 'Destroy', teacher_post, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Teacher Post', new_teacher_post_path %>

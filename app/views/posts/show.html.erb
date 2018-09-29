@@ -1,0 +1,182 @@
+<p id="notice"><%= notice %></p>
+
+<% @categories.each do |ca| %>
+<br>
+
+<h2><%= ca.name %></h2>
+<%= link_to 'New Post', post_new_path(ca) %>
+<br><br>
+<% case ca.id %>
+<% when 1%>
+
+	<% @post = Post.where(stud_id: @stud, Category: 1)%>
+	<% if @post.length == 0 %>
+		<%= "Not Posted" %>
+	<% else%>
+		<%= @post[0].data %>
+		<% status = Status.where(id: @post[0].status) %>
+		<%= status %>
+	<%end%>
+
+	<br><br>
+
+<% when 2 %>
+<table>
+	<% @profile.each do |prof| %> 
+	<tr>
+		<% @post = Post.where(stud_id: @stud, Category: 2, Subcategory: prof.id)%>
+		<td><%= prof.name %></td>
+		<% if @post.length == 0 %>
+			<td> <%= "Not Posted" %> </td>
+		<% else %>
+			<td><%= @post[0].data %></td>
+			<% status = Status.where(id: @post[0].status) %>
+			<td><%= status[0].name %></td>
+		 	
+		<% end %>
+			</tr>
+			<% end %>
+			
+		</table>
+			<br><br>
+
+<% when 3 %>
+	<% @type.each do |ty| %>
+	
+		<br><h4><%= ty.name %></h4>
+		<table>
+		<% @family.each do |fam| %> 
+		<tr>
+			<% @post = Post.where(stud_id: @stud, Category: 3, Subcategory: fam.id, types1: ty.id)%>
+			<td><%= fam.name %></td>
+			<% if @post.length == 0 %>
+				<td><%= "Not Posted" %></td>
+			<% else %>
+				<td><%= @post[0].data %></td>
+				<% status = Status.where(id: @post[0].status) %>
+				<td><%= status[0].name %></td>
+				<% end %>
+			</tr>
+		<% end %>
+		</table>
+	<% end %>
+	<br><br>
+
+<% when 4 %>
+<table>
+	<% @education.each do |edu| %> 
+	<tr>
+		<% @post = Post.where(stud_id: @stud, Category: 4, Subcategory: edu.id)%>
+		<td><%= edu.name %></td>
+		<% if @post.length == 0 %>
+				
+				<td><%= "Not Posted" %></td>
+			<% else %>
+				<td><%= @post[0].data %></td>
+				<% stat = Status.where(id: @post[0].status.to_i) %>
+				<% stat.each do |st|%>
+				<td><%= status[0].name %></td>
+				<%end%> 
+		 	
+			<% end %>
+		</tr>
+			<% end %>
+			</table>
+			<br><br>
+		
+<% when 5 %>
+<% @testing_type.each do |ty| %>
+<table>
+	<% if Post.where(types1: ty).length != 0 %>
+	<br><h4><%= ty.name %></h4>
+
+	<% @testing.each do |tes| %> 
+		<tr><% @post = Post.where(stud_id: @stud, Category: 5, Subcategory: tes.id,types1: ty)%>
+		<% if @post.length == 0 %>
+		 	<td><%= tes.name %></td>
+			<td><%= "Not Posted" %></td>
+			
+			<% else %>
+				<% @post.each do |post| %>
+					<td><%= tes.name %></td>
+					<td><%= post.data %></td>
+					<% status = Status.where(id: post.status) %>
+					<td><%= status[0].name %></td>
+		<% end %>
+		
+		
+			
+		<% end %></tr>
+		
+	<% end %>
+			<%elsif ty.name == "Test No. 1"%>
+				<% @testing.each do |tes| %>
+					<tr><td><%= tes.name%></td><td>Not Posted</td></tr>
+				<% end %>
+		<% end %>
+			</table>
+			<%end%>
+<% when 6 %>
+<% @activity_type.each do |ty| %>
+<table>
+	<% if Post.where(types1: ty).length != 0 %>
+	<br><h4><%= ty.name %></h4>
+
+	<% @activities.each do |activ| %> 
+		<tr><% @post = Post.where(stud_id: @stud, Category: 6, Subcategory: activ.id,types1: ty)%>
+		<% if @post.length == 0 %>
+		 	<td><%= activ.name %></td>
+			<td><%= "Not Posted" %></td>
+			
+			<% else %>
+				<% @post.each do |post| %>
+					<td><%= activ.name %></td>
+					<td><%= post.data %></td>
+					<% status = Status.where(id: post.status) %>
+					<td><%= status[0].name %></td>
+		<% end %>
+		
+		
+			
+		<% end %></tr>
+		
+	<% end %>
+			<%elsif ty.id == 1%>
+				<% @activities.each do |activ| %>
+					<tr><td><%= activ.name%></td><td>Not Posted</td></tr>
+				<% end %>
+		<% end %>
+			</table>
+			<%end%>
+			
+<% when 7%>
+	<% @post = Post.where(stud_id: @stud, Category: 7)%>
+	<% if @post.length == 0 %>
+		<%= "Not Posted" %>
+	<% else%>
+		<% status = Status.where(id: @post[0].status) %>
+		<td><%= status[0].name %></td><br>
+		<%= @post[0].data %>
+		
+	<%end%>
+	<br><br>
+	
+<% else %>
+<table>
+	<% @other.each do |oth|%>
+	<tr>
+		<td><%= oth.data %></td>
+		<% status = Status.where(id: oth.status) %>
+		<td><%= status[0].name %></td>
+	</tr>
+	<%end%>
+	</table>
+	<br><br>
+	
+	
+<% end %>
+<%end%>
+
+<%= link_to 'Back',student_path(session[:user_id]) %>
+
+

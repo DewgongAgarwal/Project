@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  stud_id: 1
+  category: 1
+  subcategory: 1
+  data: MyText
+  status: 1
+
+two:
+  stud_id: 1
+  category: 1
+  subcategory: 1
+  data: MyText
+  status: 1

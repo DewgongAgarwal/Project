@@ -1,0 +1,2 @@
+class AType < ApplicationRecord
+end
