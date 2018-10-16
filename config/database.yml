@@ -23,4 +23,6 @@ test:
 production:
   <<: *default
   adapter: postgresql
-  database: db/production.sqlite3
+  username: Apply2
+  password: 
+  database: Apply2_production
