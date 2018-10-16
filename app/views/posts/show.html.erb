@@ -9,7 +9,7 @@
 <% case ca.id %>
 <% when 1%>
 
-	<% @post = Post.where(stud_id: @stud, Category: 1)%>
+	<% @post = Post.where(stud_id: @stud, category: 1)%>
 	<% if @post.length == 0 %>
 		<%= "Not Posted" %>
 	<% else%>
@@ -24,7 +24,7 @@
 <table>
 	<% @profile.each do |prof| %> 
 	<tr>
-		<% @post = Post.where(stud_id: @stud, Category: 2, Subcategory: prof.id)%>
+		<% @post = Post.where(stud_id: @stud, category: 2, subcategory: prof.id)%>
 		<td><%= prof.name %></td>
 		<% if @post.length == 0 %>
 			<td> <%= "Not Posted" %> </td>
@@ -47,7 +47,7 @@
 		<table>
 		<% @family.each do |fam| %> 
 		<tr>
-			<% @post = Post.where(stud_id: @stud, Category: 3, Subcategory: fam.id, types1: ty.id)%>
+			<% @post = Post.where(stud_id: @stud, category: 3, subcategory: fam.id, types1: ty.id)%>
 			<td><%= fam.name %></td>
 			<% if @post.length == 0 %>
 				<td><%= "Not Posted" %></td>
@@ -66,7 +66,7 @@
 <table>
 	<% @education.each do |edu| %> 
 	<tr>
-		<% @post = Post.where(stud_id: @stud, Category: 4, Subcategory: edu.id)%>
+		<% @post = Post.where(stud_id: @stud, category: 4, subcategory: edu.id)%>
 		<td><%= edu.name %></td>
 		<% if @post.length == 0 %>
 				
@@ -91,7 +91,7 @@
 	<br><h4><%= ty.name %></h4>
 
 	<% @testing.each do |tes| %> 
-		<tr><% @post = Post.where(stud_id: @stud, Category: 5, Subcategory: tes.id,types1: ty)%>
+		<tr><% @post = Post.where(stud_id: @stud, category: 5, subcategory: tes.id,types1: ty)%>
 		<% if @post.length == 0 %>
 		 	<td><%= tes.name %></td>
 			<td><%= "Not Posted" %></td>
@@ -125,7 +125,7 @@
 	<br><h4><%= ty.name %></h4>
 
 	<% @activities.each do |activ| %> 
-		<tr><% @post = Post.where(stud_id: @stud, Category: 6, Subcategory: activ.id,types1: ty)%>
+		<tr><% @post = Post.where(stud_id: @stud, category: 6, subcategory: activ.id,types1: ty)%>
 		<% if @post.length == 0 %>
 		 	<td><%= activ.name %></td>
 			<td><%= "Not Posted" %></td>
@@ -154,7 +154,7 @@
 			<%end%>
 			
 <% when 7%>
-	<% @post = Post.where(stud_id: @stud, Category: 7)%>
+	<% @post = Post.where(stud_id: @stud, category: 7)%>
 	<% if @post.length == 0 %>
 		<%= "Not Posted" %>
 	<% else%>
