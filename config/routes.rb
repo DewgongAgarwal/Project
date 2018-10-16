@@ -2,20 +2,41 @@ Rails.application.routes.draw do
     resources :school_view_teacher_posts
     resources :school_view_student_posts
     resources :teacher_posts, :except => [:new]
-resources :teacher_view_student_posts
-resources :posts, :except => [:new]
+    resources :teacher_view_student_posts
+    resources :posts, :except => [:new]
   resources :schools
   resources :teachers
   resources :students
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root to: 'home#index'
-  
+      
   controller :student_session do
       get    '/studentlogin' =>  :new
       post   '/studentlogin' => :create
       get '/studentlogout' =>  :destroy
       
   end
+ 
+ controller :teacher_view_student_posts do
+     
+     get 'verified/new/:id/:id2' => :verified, as: :verified_new
+     get 'rejected/new/:id/:id2' => :rejected, as: :rejected_new
+     
+end
+ 
+ controller :school_view_student_posts do
+     
+     get 'verifiedss/new/:id/:id2' => :verified, as: :verifiedss_new
+     get 'rejectedss/new/:id/:id2' => :rejected, as: :rejectedss_new
+     
+ end
+ 
+ controller :school_view_teacher_posts do
+     
+     get 'verifiedst/new/:id/:id2' => :verified, as: :verifiedst_new
+     get 'rejectedst/new/:id/:id2' => :rejected, as: :rejectedst_new
+     
+ end
  
  controller :posts do
      get    '/post/new/:ids' =>  :new, as: :post_new

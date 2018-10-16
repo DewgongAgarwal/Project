@@ -98,10 +98,12 @@
 			
 			<% else %>
 				<% @post.each do |post| %>
+				<tr>
 					<td><%= tes.name %></td>
 					<td><%= post.data %></td>
 					<% status = Status.where(id: post.status) %>
 					<td><%= status[0].name %></td>
+					</tr>
 		<% end %>
 		
 		
@@ -130,10 +132,12 @@
 			
 			<% else %>
 				<% @post.each do |post| %>
+				<tr>
 					<td><%= activ.name %></td>
 					<td><%= post.data %></td>
 					<% status = Status.where(id: post.status) %>
 					<td><%= status[0].name %></td>
+					</tr>
 		<% end %>
 		
 		
@@ -155,7 +159,7 @@
 		<%= "Not Posted" %>
 	<% else%>
 		<% status = Status.where(id: @post[0].status) %>
-		<td><%= status[0].name %></td><br>
+		<tr><td><%= status[0].name %></td><br></tr>
 		<%= @post[0].data %>
 		
 	<%end%>

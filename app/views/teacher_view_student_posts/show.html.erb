@@ -26,8 +26,8 @@
 		<%end%>
 		<td><%= subcategory %></td>
 		<td><%= post.data %> </td>
-		<td><%= link_to "Verify"%></td>
-		<td><%= link_to "Reject"%></td>
+		<td><%= link_to "Verify", verified_new_path(@teacher.id, post.id)%></td>
+		<td><%= link_to "Reject", rejected_new_path(@teacher.id, post.id)%></td>
 		</tr>
 		<% if post.types1 %>
 			<% related_posts = Post.where(stud_id: student.id, category: post.category, status: [2,3,4], types1: post.types1)%>
@@ -61,5 +61,7 @@
 		<tr height = 20px></tr>
 		<%end%>
 	<%end%>
+	<%end%>
 	<%= link_to "Back", teacher_path(@teacher) %>
+	
 </table>
