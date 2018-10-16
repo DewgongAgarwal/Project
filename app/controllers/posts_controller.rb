@@ -20,7 +20,7 @@ class PostsController < ApplicationController
       @type = Type.all
       @testing_type = TType.all
       @activity_type = AType.all
-      @other = Post.where(stud_id: @stud, Category: 8)
+      @other = Post.where(stud_id: @stud, category: 8)
 #      @status = Status.all
   end
 
