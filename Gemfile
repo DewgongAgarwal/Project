@@ -10,7 +10,7 @@ group :development, :test do
   gem 'sqlite3'
 end
 
-group :test, :production do
+group :production do
   gem 'pg', '~> 0.18'
 end
 # Use Puma as the app server
