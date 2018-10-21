@@ -6,6 +6,10 @@ class SchoolSessionController < ApplicationController
         sch_user = School.find_by(email: params[:session][:email].downcase)
         if sch_user && sch_user.authenticate(params[:session][:password])
             log_in sch_user
+            $student_islogged_in = false
+            $teacher_islogged_in = false
+            $school_islogged_in = true
+            $logger_id = sch_user.id
             redirect_to sch_user
             else
             flash.now[:warning] = "Invalid-Access Denied"
@@ -15,6 +19,10 @@ class SchoolSessionController < ApplicationController
     
     def destroy
         log_out
-        redirect_to sch_path
+        $student_islogged_in = false
+        $teacher_islogged_in = false
+        $school_islogged_in = false
+        $logger_id = 0
+        redirect_to schools_path
     end
 end

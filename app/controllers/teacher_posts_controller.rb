@@ -3,28 +3,39 @@ class TeacherPostsController < ApplicationController
 
   # GET /teacher_posts
   # GET /teacher_posts.json
-  def index
-    @teacher_posts = TeacherPost.all
-  end
+#  def index
+#    @teacher_posts = TeacherPost.all
+#  end
 
   # GET /teacher_posts/1
   # GET /teacher_posts/1.json
   def show
-      @categories = Category.where(id: [1, 2])
-      @profile = Profile.all
+      
+       if not $student_islogged_in and $teacher_islogged_in and not $school_islogged_in and $logger_id == @teacher_post.id
+              @categories = Category.where(id: [1, 2])
+              @profile = Profile.all
+              
+              else
+              redirect_to teacherlogin_url
+       end
   end
 
   # GET /teacher_posts/new
   def new
-    @category_id = params[:ids]
-    if @category_id == "1"
-        @type = nil
-        @subcategory = nil
-        else
-            @type = nil
-            @subcategory = Profile.all
-        end
-    @teacher_post = TeacherPost.new
+      if not $student_islogged_in and $teacher_islogged_in and not $school_islogged_in and $logger_id == @teacher_post.id
+            @category_id = params[:ids]
+            if @category_id == "1"
+                @type = nil
+                @subcategory = nil
+                else
+                    @type = nil
+                    @subcategory = Profile.all
+                end
+            @teacher_post = TeacherPost.new
+            
+            else
+            redirect_to teacherlogin_url
+      end
   end
 
   # GET /teacher_posts/1/edit
@@ -32,17 +43,25 @@ class TeacherPostsController < ApplicationController
   # POST /teacher_posts
   # POST /teacher_posts.json
   def create
-    @teacher_post = TeacherPost.new(teacher_post_params)
-    check_post = TeacherPost.where(stud_id: @teacher_post.teacher_id, category: @teacher_post.category, subcategory: @teacher_post.subcategory, types1: @teacher_post.types1, status: [2,3,4])
-    respond_to do |format|
-      if @teacher_post.save
-        format.html { redirect_to @teacher_post, notice: 'Teacher post was successfully created.' }
-        format.json { render :show, status: :created, location: @teacher_post }
-      else
-        format.html { render :new }
-        format.json { render json: @teacher_post.errors, status: :unprocessable_entity }
-      end
-    end
+      if not $student_islogged_in and $teacher_islogged_in and not $school_islogged_in and $logger_id == @teacher_post.id
+      
+            @teacher_post = TeacherPost.new(teacher_post_params)
+            check_post = TeacherPost.where(stud_id: @teacher_post.teacher_id, category: @teacher_post.category, subcategory: @teacher_post.subcategory, types1: @teacher_post.types1, status: [2,3,4])
+            respond_to do |format|
+              if @teacher_post.save
+                format.html { redirect_to @teacher_post, notice: 'Teacher post was successfully created.' }
+                format.json { render :show, status: :created, location: @teacher_post }
+              else
+                format.html { render :new }
+                format.json { render json: @teacher_post.errors, status: :unprocessable_entity }
+              end
+            end
+    
+    
+    else
+    redirect_to teacherlogin_url
+  end
+    
   end
 
   # PATCH/PUT /teacher_posts/1

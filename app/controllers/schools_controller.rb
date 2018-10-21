@@ -10,8 +10,18 @@ class SchoolsController < ApplicationController
   # GET /schools/1
   # GET /schools/1.json
   def show
-      @students = Student.where(school: @school.id)
-      @teachers = Teacher.where(school: @school.id)
+      
+      if not $student_islogged_in and not $teacher_islogged_in and $school_islogged_in and $logger_id == @school.id
+          
+          @students = Student.where(school: @school.id)
+          @teachers = Teacher.where(school: @school.id)
+          
+          
+          else
+          redirect_to schoollogin_url
+      end
+      
+      
   end
 
   # GET /schools/new
@@ -21,6 +31,10 @@ class SchoolsController < ApplicationController
 
   # GET /schools/1/edit
   def edit
+      if not $student_islogged_in and not $teacher_islogged_in and $school_islogged_in and $logger_id == @school.id
+          else
+          redirect_to schoollogin_url
+      end
   end
 
   # POST /schools
@@ -42,15 +56,19 @@ class SchoolsController < ApplicationController
   # PATCH/PUT /schools/1
   # PATCH/PUT /schools/1.json
   def update
-    respond_to do |format|
-      if @school.update(school_params)
-        format.html { redirect_to @school, notice: 'School was successfully updated.' }
-        format.json { render :show, status: :ok, location: @school }
-      else
-        format.html { render :edit }
-        format.json { render json: @school.errors, status: :unprocessable_entity }
+      if not student_islogged_in and not $teacher_islogged_in and $school_islogged_in and $logger_id == @school.id
+          respond_to do |format|
+              if @school.update(school_params)
+                  format.html { redirect_to @school, notice: 'School was successfully updated.' }
+                  format.json { render :show, status: :ok, location: @school }
+                  else
+                  format.html { render :edit }
+                  format.json { render json: @school.errors, status: :unprocessable_entity }
+              end
+          end
+          else
+          redirect_to school_session_path
       end
-    end
   end
 
   # DELETE /schools/1

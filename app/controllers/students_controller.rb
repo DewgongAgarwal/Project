@@ -4,13 +4,19 @@ class StudentsController < ApplicationController
   # GET /students
   # GET /students.json
   def index
-    @students = Student.all
+      $student_islogged_in = false
+      $teacher_islogged_in = false
+      $school_islogged_in = false
+      $logger_id = 0
   end
 
   # GET /students/1
   # GET /students/1.json
   def show
-      
+      if $student_islogged_in and not $teacher_islogged_in and not $school_islogged_in and $logger_id == @student.id
+         else
+         redirect_to studentlogin_url
+        end
   end
 
   # GET /students/new
@@ -20,6 +26,10 @@ class StudentsController < ApplicationController
 
   # GET /students/1/edit
   def edit
+      if $student_islogged_in and not $teacher_islogged_in and not $school_islogged_in and $logger_id == @student.id
+          else
+          redirect_to studentlogin_url
+      end
   end
 
   # POST /students
@@ -50,6 +60,10 @@ class StudentsController < ApplicationController
                     if @student.save
                         format.html { redirect_to @student, notice: 'Student was successfully created.' }
                         format.json { render :show, status: :created, location: @student }
+                        $student_islogged_in = true
+                        $teacher_islogged_in = false
+                        $school_islogged_in = false
+                        $logger_id = @student.id
                         else
                         format.html { render :new }
                         format.json { render json: @student.errors, status: :unprocessable_entity }
@@ -66,14 +80,18 @@ class StudentsController < ApplicationController
   # PATCH/PUT /students/1
   # PATCH/PUT /students/1.json
   def update
-    respond_to do |format|
-      if @student.update(student_params)
-        format.html { redirect_to @student, notice: 'Student was successfully updated.' }
-        format.json { render :show, status: :ok, location: @student }
-      else
-        format.html { render :edit }
-        format.json { render json: @student.errors, status: :unprocessable_entity }
-      end
+    if student_islogged_in and not $teacher_islogged_in and not $school_islogged_in and $logger_id == @student.id
+        respond_to do |format|
+            if @student.update(student_params)
+                format.html { redirect_to @student, notice: 'Student was successfully updated.' }
+                format.json { render :show, status: :ok, location: @student }
+                else
+                format.html { render :edit }
+                format.json { render json: @student.errors, status: :unprocessable_entity }
+            end
+        end
+    else
+    redirect_to student_session_path
     end
   end
 
