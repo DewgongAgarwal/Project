@@ -35,13 +35,20 @@
     <%= form.label :password_confirmation %>
     <%= form.password_field :password_confirmation %>
   </div>
-
+  
   <div class="field">
     <%= form.label :school %>
     <%= form.select :school, School.all.collect {|x| [x.name, x.id]}, {:include_blank => "Select One"}  %>
   </div>
-
+  
   <div class="actions">
     <%= form.submit %>
   </div>
+  
 <% end %>
+
+
+
+
+
+

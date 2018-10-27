@@ -19,14 +19,49 @@
   <strong>School:</strong>
   <%= @teacher.school %>
 </p>
+<% if @teacher.keys %>
+  	<strong>Public Key:</strong>
+  	<%= @teacher.keys %>
+	
+	<%else%>
+<p onclick = "giveKey()" >
+<strong>Generate Key:</strong>
+	<p id = "Public Key"></p>
+</p>
+	
+<%end%>
 <p>
 <h3>My Students</h3>
 <% @students.each do |s| %>
 <%= s.firstname %> <%= s.lastname =%><br> 
 <% end %>
-
 </p>
 <%= link_to 'Edit', edit_teacher_path(@teacher) %> |
 <%= link_to 'Log Out', teacherlogout_path %> |
 <%= link_to 'My Posts', teacher_post_path(@teacher) %> |
 <%= link_to 'Student Posts', teacher_view_student_post_path(@teacher) %>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script language="JavaScript" type="text/javascript" src="http://localhost:3000/assets/rsa.self-9c9e3db64700d9507544d0cf380a7b7d5e9cefdbc643749ba25cf8324ec23525.js?body=1"></script>
+<script>
+function giveKey() {
+	var key = cryptico.generateRSAKey("<%= @teacher.email%>", 1024);
+	document.getElementById("Public Key").innerHTML = key.n.toString();
+	localStorage.setItem("<%= @teacher.email%>"+"n", key.n);
+	localStorage.setItem("<%= @teacher.email%>"+"d", key.d);
+	localStorage.setItem("<%= @teacher.email%>"+"p", key.p);
+	localStorage.setItem("<%= @teacher.email%>"+"q", key.q);
+	localStorage.setItem("<%= @teacher.email%>"+"e", key.e);
+	localStorage.setItem("<%= @teacher.email%>"+"dmp1", key.dmp1);
+	localStorage.setItem("<%= @teacher.email%>"+"dmq1", key.dmq1);
+	localStorage.setItem("<%= @teacher.email%>"+"coeff", key.coeff);
+	$.ajax({
+            url: '/set_key',
+            type: 'POST',
+            dataType: 'json',
+			data: {id: <%=@teacher.id%>, Key: localStorage.getItem("<%=@teacher.email%>"+"n")}
+            });
+	
+}
+</script>
+

@@ -4,18 +4,21 @@
 <br>
 
 <h2><%= ca.name %></h2>
-<%= link_to 'New Post', post_new_path(ca) %>
+<%= link_to 'New Post', post_new_path(@stud.id,ca) %>
 <br><br>
 <% case ca.id %>
 <% when 1%>
 
-	<% @post = Post.where(stud_id: @stud, Category: 1)%>
+	<% @post = Post.where(stud_id: @stud, category: 1)%>
 	<% if @post.length == 0 %>
 		<%= "Not Posted" %>
 	<% else%>
 		<%= @post[0].data %>
 		<% status = Status.where(id: @post[0].status) %>
 		<%= status %>
+		<% if post.sign_id %>
+					<td><%= link_to "Check", check_path(post.id, @stud)%></td>
+					<%end%>
 	<%end%>
 
 	<br><br>
@@ -24,7 +27,7 @@
 <table>
 	<% @profile.each do |prof| %> 
 	<tr>
-		<% @post = Post.where(stud_id: @stud, Category: 2, Subcategory: prof.id)%>
+		<% @post = Post.where(stud_id: @stud, category: 2, subcategory: prof.id)%>
 		<td><%= prof.name %></td>
 		<% if @post.length == 0 %>
 			<td> <%= "Not Posted" %> </td>
@@ -32,7 +35,9 @@
 			<td><%= @post[0].data %></td>
 			<% status = Status.where(id: @post[0].status) %>
 			<td><%= status[0].name %></td>
-		 	
+			<% if post.sign_id %>
+				<td><%= link_to "Check", check_path(post.id, @stud)%></td>
+				<%end%>
 		<% end %>
 			</tr>
 			<% end %>
@@ -47,7 +52,7 @@
 		<table>
 		<% @family.each do |fam| %> 
 		<tr>
-			<% @post = Post.where(stud_id: @stud, Category: 3, Subcategory: fam.id, types1: ty.id)%>
+			<% @post = Post.where(stud_id: @stud, category: 3, subcategory: fam.id, types1: ty.id)%>
 			<td><%= fam.name %></td>
 			<% if @post.length == 0 %>
 				<td><%= "Not Posted" %></td>
@@ -55,6 +60,9 @@
 				<td><%= @post[0].data %></td>
 				<% status = Status.where(id: @post[0].status) %>
 				<td><%= status[0].name %></td>
+				<% if post.sign_id %>
+					<td><%= link_to "Check", check_path(post.id, @stud)%></td>
+					<%end%>
 				<% end %>
 			</tr>
 		<% end %>
@@ -66,7 +74,7 @@
 <table>
 	<% @education.each do |edu| %> 
 	<tr>
-		<% @post = Post.where(stud_id: @stud, Category: 4, Subcategory: edu.id)%>
+		<% @post = Post.where(stud_id: @stud, category: 4, subcategory: edu.id)%>
 		<td><%= edu.name %></td>
 		<% if @post.length == 0 %>
 				
@@ -76,6 +84,9 @@
 				<% stat = Status.where(id: @post[0].status.to_i) %>
 				<% stat.each do |st|%>
 				<td><%= status[0].name %></td>
+				<% if post.sign_id %>
+					<td><%= link_to "Check", check_path(post.id, @stud)%></td>
+					<%end%>
 				<%end%> 
 		 	
 			<% end %>
@@ -87,11 +98,11 @@
 <% when 5 %>
 <% @testing_type.each do |ty| %>
 <table>
-	<% if Post.where(types1: ty).length != 0 %>
+	<% if Post.where(types1: ty,stud_id: @stud).length != 0 %>
 	<br><h4><%= ty.name %></h4>
 
 	<% @testing.each do |tes| %> 
-		<tr><% @post = Post.where(stud_id: @stud, Category: 5, Subcategory: tes.id,types1: ty)%>
+		<tr><% @post = Post.where(stud_id: @stud, category: 5, subcategory: tes.id,types1: ty)%>
 		<% if @post.length == 0 %>
 		 	<td><%= tes.name %></td>
 			<td><%= "Not Posted" %></td>
@@ -103,6 +114,9 @@
 					<td><%= post.data %></td>
 					<% status = Status.where(id: post.status) %>
 					<td><%= status[0].name %></td>
+					<% if post.sign_id %>
+					<td><%= link_to "Check", check_path(post.id, @stud)%></td>
+					<%end%>
 					</tr>
 		<% end %>
 		
@@ -121,11 +135,11 @@
 <% when 6 %>
 <% @activity_type.each do |ty| %>
 <table>
-	<% if Post.where(types1: ty).length != 0 %>
+	<% if Post.where(types1: ty,stud_id: @stud).length != 0 %>
 	<br><h4><%= ty.name %></h4>
 
 	<% @activities.each do |activ| %> 
-		<tr><% @post = Post.where(stud_id: @stud, Category: 6, Subcategory: activ.id,types1: ty)%>
+		<tr><% @post = Post.where(stud_id: @stud, category: 6, subcategory: activ.id,types1: ty)%>
 		<% if @post.length == 0 %>
 		 	<td><%= activ.name %></td>
 			<td><%= "Not Posted" %></td>
@@ -137,7 +151,10 @@
 					<td><%= post.data %></td>
 					<% status = Status.where(id: post.status) %>
 					<td><%= status[0].name %></td>
-					</tr>
+					<% if post.sign_id %>
+					<td><%= link_to "Check", check_path(post.id, @stud)%></td>
+					<%end%>
+				</tr>
 		<% end %>
 		
 		
@@ -154,12 +171,15 @@
 			<%end%>
 			
 <% when 7%>
-	<% @post = Post.where(stud_id: @stud, Category: 7)%>
+	<% @post = Post.where(stud_id: @stud, category: 7)%>
 	<% if @post.length == 0 %>
 		<%= "Not Posted" %>
 	<% else%>
 		<% status = Status.where(id: @post[0].status) %>
 		<tr><td><%= status[0].name %></td><br></tr>
+			<% if post.sign_id %>
+				<td><%= link_to "Check", check_path(post.id, @stud)%></td>
+		<%end%>
 		<%= @post[0].data %>
 		
 	<%end%>
@@ -172,6 +192,9 @@
 		<td><%= oth.data %></td>
 		<% status = Status.where(id: oth.status) %>
 		<td><%= status[0].name %></td>
+		<% if post.sign_id %>
+		<td><%= link_to "Check", check_path(post.id, @stud)%></td>
+		<%end%>
 	</tr>
 	<%end%>
 	</table>
@@ -182,5 +205,3 @@
 <%end%>
 
 <%= link_to 'Back',student_path(session[:user_id]) %>
-
-

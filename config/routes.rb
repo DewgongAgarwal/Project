@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+#  get 'check/index'
+#    resources :set_key
     resources :school_view_teacher_posts
     resources :school_view_student_posts
     resources :teacher_posts, :except => [:new]
@@ -9,7 +11,17 @@ Rails.application.routes.draw do
   resources :students
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root to: 'home#index'
+  
+  controller :set_key do
+      post   '/set_key/:id' => :index
       
+  end
+  
+  controller :check do
+      get'/check/:id/:id2' => :index, as: :check
+      
+  end
+  
   controller :student_session do
       get    '/studentlogin' =>  :new
       post   '/studentlogin' => :create
@@ -19,8 +31,8 @@ Rails.application.routes.draw do
  
  controller :teacher_view_student_posts do
      
-     get 'verified/new/:id/:id2' => :verified, as: :verified_new
-     get 'rejected/new/:id/:id2' => :rejected, as: :rejected_new
+     post 'verified/new' => :verified, as: :verified_new
+     post 'rejected/new' => :rejected, as: :rejected_new
      
 end
  
@@ -39,7 +51,7 @@ end
  end
  
  controller :posts do
-     get    '/post/new/:ids' =>  :new, as: :post_new
+     get    '/post/new/:id/:ids' =>  :new, as: :post_new
      
  end
  

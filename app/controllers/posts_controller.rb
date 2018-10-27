@@ -1,5 +1,6 @@
 class PostsController < ApplicationController
     before_action :set_post, only: [:show, :new, :create]
+    skip_before_action :verify_authenticity_token, only: [:set_id]
 #  before_action :set_category, only: [:new]
   # GET /posts
   # GET /posts.json
@@ -21,10 +22,10 @@ class PostsController < ApplicationController
           @testing_type = TType.all
           @activity_type = AType.all
           @other = Post.where(stud_id: @stud, Category: 8)
+          puts($id)
         else
             redirect_to studentlogin_url
       end
-
   end
 
   # GET /posts/new
@@ -70,8 +71,9 @@ class PostsController < ApplicationController
   # POST /posts
   # POST /posts.json
   def create
-      if $student_islogged_in and not $teacher_islogged_in and not $school_islogged_in and $logger_id == @stud.id
+      
         @post = Post.new(post_params)
+    if $student_islogged_in and not $teacher_islogged_in and not $school_islogged_in and $logger_id == @post.stud_id
         check_post = Post.where(stud_id: @post.stud_id, category: @post.category, subcategory: @post.subcategory, types1: @post.types1, status: [2,3,4])
         respond_to do |format|
           if check_post.length == 0 and @post.save

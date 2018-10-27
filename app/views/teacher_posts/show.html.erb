@@ -9,7 +9,7 @@
 <% case ca.id %>
 <% when 1%>
 
-	<% @post = TeacherPost.where(teacher_id: @teacher, Category: 1)%>
+	<% @post = TeacherPost.where(teacher_id: @teacher, category: 1)%>
 	<% if @post.length == 0 %>
 		<%= "Not Posted" %>
 	<% else%>
@@ -24,7 +24,7 @@
 <table>
 	<% @profile.each do |prof| %> 
 	<tr>
-		<% @post = TeacherPost.where(teacher_id: @teacher, Category: 2, Subcategory: prof.id)%>
+		<% @post = TeacherPost.where(teacher_id: @teacher, category: 2, subcategory: prof.id)%>
 		<td><%= prof.name %></td>
 		<% if @post.length == 0 %>
 			<td> <%= "Not Posted" %> </td>
@@ -42,4 +42,4 @@
 	<br><br>
 	<% end %>
 <% end %>
-<%= link_to 'Back', teacher_path(session[:user_id]) %>
+<%= link_to 'Back', teacher_path(@teacher) %>

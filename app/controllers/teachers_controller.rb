@@ -1,5 +1,6 @@
 class TeachersController < ApplicationController
   before_action :set_teacher, only: [:show, :edit, :update, :destroy]
+#  respond_to :html, :js
 
   # GET /teachers
   # GET /teachers.json
@@ -62,12 +63,12 @@ class TeachersController < ApplicationController
     else
         if @stud.length == 0 and @teach.length == 0 and @sch.length == 0
             if @teacher.save
-                format.html { redirect_to @teacher, notice: 'Teacher was successfully created.' }
-                format.json { render :show, status: :created, location: @teacher }
-                $student_islogged_in = true
-                $teacher_islogged_in = false
+                $student_islogged_in = false
+                $teacher_islogged_in = true
                 $school_islogged_in = false
                 $logger_id = @teacher.id
+                format.html { redirect_to @teacher, notice: 'Teacher was successfully created.' }
+                format.json { render :show, status: :created, location: @teacher }
                 else
                 format.html { render :new }
                 format.json { render json: @teacher.errors, status: :unprocessable_entity }
@@ -83,7 +84,7 @@ class TeachersController < ApplicationController
   # PATCH/PUT /teachers/1
   # PATCH/PUT /teachers/1.json
   def update
-      if not student_islogged_in and $teacher_islogged_in and not $school_islogged_in and $logger_id == @student.id
+      if not $student_islogged_in and $teacher_islogged_in and not $school_islogged_in and $logger_id == @teacher.id
           respond_to do |format|
               if @teacher.update(teacher_params)
                   format.html { redirect_to @teacher, notice: 'Your Account was successfully updated.' }
@@ -94,7 +95,7 @@ class TeachersController < ApplicationController
               end
           end
           else
-          redirect_to teacher_session_path
+          redirect_to teacherlogin_url
       end
   end
 
@@ -116,6 +117,6 @@ class TeachersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def teacher_params
-      params.require(:teacher).permit(:firstname, :lastname, :email, :password, :password_confirmation, :school)
+        params.require(:teacher).permit(:firstname, :lastname, :email, :password, :password_confirmation, :school, :keys)
     end
 end
