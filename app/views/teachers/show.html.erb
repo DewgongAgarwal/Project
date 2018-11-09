@@ -47,16 +47,10 @@
 function giveKey() {
 	var key = cryptico.generateRSAKey("<%= @teacher.email%>", 1024);
 	document.getElementById("Public Key").innerHTML = key.n.toString();
-	localStorage.setItem("<%= @teacher.email%>"+"n", key.n);
 	localStorage.setItem("<%= @teacher.email%>"+"d", key.d);
-	localStorage.setItem("<%= @teacher.email%>"+"p", key.p);
-	localStorage.setItem("<%= @teacher.email%>"+"q", key.q);
-	localStorage.setItem("<%= @teacher.email%>"+"e", key.e);
-	localStorage.setItem("<%= @teacher.email%>"+"dmp1", key.dmp1);
-	localStorage.setItem("<%= @teacher.email%>"+"dmq1", key.dmq1);
-	localStorage.setItem("<%= @teacher.email%>"+"coeff", key.coeff);
+	localStorage.setItem("<%= @teacher.email%>"+"n", key.n);
 	$.ajax({
-            url: '/set_key',
+            url: '/set_key_teacher',
             type: 'POST',
             dataType: 'json',
 			data: {id: <%=@teacher.id%>, Key: localStorage.getItem("<%=@teacher.email%>"+"n")}

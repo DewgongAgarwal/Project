@@ -13,8 +13,14 @@ Rails.application.routes.draw do
   root to: 'home#index'
   
   controller :set_key do
-      post   '/set_key/:id' => :index
+      post   '/set_key_teacher' => :teacher, as: :set_key_teacher
+      post '/set_key_student' => :student, as: :set_key_student
+      post 'set_key_school' => :school, as: :set_key_school
       
+  end
+  
+  controller :communicate do
+      post '/communicate' => :index
   end
   
   controller :check do

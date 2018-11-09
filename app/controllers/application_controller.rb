@@ -6,5 +6,5 @@ class ApplicationController < ActionController::Base
     $student_islogged_in = false
     $teacher_islogged_in = false
     $school_islogged_in = false
-    $id = 0
+    $comm_key = 0
 end

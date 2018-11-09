@@ -23,38 +23,12 @@ class SchoolsController < ApplicationController
       
       
   end
-
-  # GET /schools/new
-#  def new
-#    @school = School.new
-#  end
-
-  # GET /schools/1/edit
   def edit
       if not $student_islogged_in and not $teacher_islogged_in and $school_islogged_in and $logger_id == @school.id
           else
           redirect_to schoollogin_url
       end
   end
-
-  # POST /schools
-  # POST /schools.json
-#  def create
-#    @school = School.new(school_params)
-#
-#    respond_to do |format|
-#      if @school.save
-#        format.html { redirect_to @school, notice: 'School was successfully created.' }
-#        format.json { render :show, status: :created, location: @school }
-#      else
-#        format.html { render :new }
-#        format.json { render json: @school.errors, status: :unprocessable_entity }
-#      end
-#    end
-#  end
-
-  # PATCH/PUT /schools/1
-  # PATCH/PUT /schools/1.json
   def update
       if not student_islogged_in and not $teacher_islogged_in and $school_islogged_in and $logger_id == @school.id
           respond_to do |format|
