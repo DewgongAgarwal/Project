@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_30_194111) do
+ActiveRecord::Schema.define(version: 2018_11_10_171612) do
 
   create_table "a_types", force: :cascade do |t|
     t.string "name"
@@ -66,6 +66,7 @@ ActiveRecord::Schema.define(version: 2018_10_30_194111) do
     t.integer "sign_id"
     t.text "signature"
     t.text "postkey"
+    t.text "studentSign"
   end
 
   create_table "profiles", force: :cascade do |t|

@@ -21,7 +21,6 @@ class TeacherViewStudentPostsController < ApplicationController
             post.status = 3
             post.sign_id = params[:id]
             post.signature = params[:signature]
-            post.postkey = params[:post_key]
             post.save
             redirect_to teacher_view_student_post_path(params[:id])
             else
@@ -34,7 +33,6 @@ class TeacherViewStudentPostsController < ApplicationController
             post = Post.find(params[:id2])
             post.status = 5
             post.sign_id = params[:id]
-            post.postkey = params[:post_key]
             post.signature = params[:signature]
             post.save
             redirect_to teacher_view_student_post_path(params[:id])

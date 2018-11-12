@@ -19,88 +19,19 @@
   <strong>School:</strong>
   <%= @student.school %>
 </p>
-
-<% if @student.keys %>
+<p>
   	<strong>Public Key:</strong>
   	<%= @student.keys %>
-	
-	<%else%>
-<p onclick = "giveKey()" >
-<strong>Generate Key:</strong>
-	<p id = "Public Key"></p>
 </p>
-<%end%>
-
-<!-- <p onclick = "give_commkey()" id = "comm_key">Communication Key</p> -->
-
 
 <%= link_to 'Edit', edit_student_path(@student) %> |
 <%= link_to 'Posts', post_path(@student) %>
 <p onclick = "logout()"><%= link_to 'Log Out', studentlogout_url %></p>
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script language="JavaScript" type="text/javascript" src="http://localhost:3000/assets/rsa.self-9c9e3db64700d9507544d0cf380a7b7d5e9cefdbc643749ba25cf8324ec23525.js?body=1"></script>
-<script language="JavaScript" type="text/javascript" src="http://localhost:3000/assets/BigInteger.self-3449fe08e0a1454ccf5a023320cd523f3180d439c1d8ccb7639807df7cdf53b4.js?body=1" ></script>
 <script>
-function giveKey() {
-	var key = cryptico.generateRSAKey("<%= @student.email%>", 1024);
-	document.getElementById("Public Key").innerHTML = key.n.toString();
-	localStorage.setItem("<%= @student.email%>"+"d", key.d);
-	localStorage.setItem("<%= @student.email%>"+"n", key.n);
-	$.ajax({
-            url: '/set_key_student',
-            type: 'POST',
-            dataType: 'json',
-            async: false,
-			data: {id: <%=@student.id%>, Key: localStorage.getItem("<%=@student.email%>"+"n")}
-            });
-            
-            
-    give_commkey();
-}
-
-function give_commkey()
-{          
-    var data = {username: "<%= @student.email%>"};  
-    var data_returned;      
-	$.ajax({
-            url: '/communicate',
-            type: 'POST',
-            dataType: 'text',
-			data: data,
-			async: false,
-			success: function (data_returned_by_server) {
-				data_returned = data_returned_by_server;
-            	
-        	},
-        	error: function (result) {
-            	alert('error');
-        	}
-			
-            });
-            
-        var x1 = bigInt(data_returned).modPow(bigInt(localStorage.getItem("<%=@student.email%>"+"d")), bigInt(localStorage.getItem("<%=@student.email%>"+"n")));
-        var x2 = x1.toString(16);
-		var y2 = x2.substring(64);
-		x2 = x2.substring(0,64);
-		var r1 = bigInt(y2,16).xor(bigInt(SHA256(x2),16)).toString(16);
-		var message = bigInt(x2,16).xor(bigInt(SHA256(r1),16));
-		var comm_key_padded = message.toString(16);			
-		var comm_key = comm_key_padded.substring(0, 32) + comm_key_padded.substring(42);
-		var checker_message = comm_key_padded.substring(32, 42);
-        alert(checker_message);
-        if (checker_message == "1001001001")
-		{
-			sessionStorage.setItem("<%= @student.email%>" + "comm_key", comm_key);
-		}
-		
-			
-            
-}
-
-function logout()
-{
-	sessionStorage.removeItem("<%= @student.email%>" + "comm_key");
-}
+	function logout()
+	{
+		sessionStorage.removeItem("<%= @student.email%>" + "comm_key");
+	}
 </script>
 

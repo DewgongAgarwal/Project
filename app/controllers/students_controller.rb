@@ -1,6 +1,6 @@
 class StudentsController < ApplicationController
   before_action :set_student, only: [:show, :edit, :update, :destroy]
-
+  skip_before_action :verify_authenticity_token
   # GET /students
   # GET /students.json
   def index
@@ -22,6 +22,7 @@ class StudentsController < ApplicationController
   # GET /students/new
   def new
     @student = Student.new
+    @school = School.all
   end
 
   # GET /students/1/edit
@@ -35,46 +36,30 @@ class StudentsController < ApplicationController
   # POST /students
   # POST /students.json
   def create
-    @student = Student.new(student_params)
-    @stud = Student.where(email: @student.email)
-    @teach = Teacher.where(email: @student.email)
-    @sch = School.where(email: @student.email)
-    respond_to do |format|
-        if not @student.firstname
-            format.html { redirect_to students_path, notice: 'First Name cannot be empty' }
-            format.json { render json: @student.errors, status: :unprocessable_entity }
-            elsif not @student.lastname
-            format.html { redirect_to students_path, notice: 'Last Name cannot be empty' }
-            format.json { render json: @student.errors, status: :unprocessable_entity }
-            elsif not @student.email
-            format.html { redirect_to students_path, notice: 'Email cannot be empty' }
-            format.json { render json: @student.errors, status: :unprocessable_entity }
-            elsif not @student.password
-            format.html { redirect_to students_path, notice: 'Password cannot be empty' }
-            format.json { render json: @student.errors, status: :unprocessable_entity }
-            elsif not @student.school
-            format.html { redirect_to students_path, notice: 'Select One School' }
-            format.json { render json: @student.errors, status: :unprocessable_entity }
+    student = Student.new()
+    student.email = params[:email]
+    student.password = params[:password]
+    student.firstname = params[:firstname]
+    student.lastname = params[:lastname]
+    student.school = params[:school]
+    student.keys = params[:keys]
+    stud = Student.where(email: student.email)
+    teach = Teacher.where(email: student.email)
+    sch = School.where(email: student.email)
+        
+        if stud.length == 0 and teach.length == 0 && sch.length == 0
+            if student.save
+                $student_islogged_in = true
+                $teacher_islogged_in = false
+                $school_islogged_in = false
+                $logger_id = student.id
+                redirect_to student, notice: 'Student was successfully created.'
             else
-                if @stud.length == 0 and @teach.length == 0 && @sch.length == 0
-                    if @student.save
-                        format.html { redirect_to @student, notice: 'Student was successfully created.' }
-                        format.json { render :show, status: :created, location: @student }
-                        $student_islogged_in = true
-                        $teacher_islogged_in = false
-                        $school_islogged_in = false
-                        $logger_id = @student.id
-                        else
-                        format.html { render :new }
-                        format.json { render json: @student.errors, status: :unprocessable_entity }
-                    end
-                    else
-                    format.html { redirect_to students_path, notice: 'User Exists' }
-                    format.json { render json: @student.errors, status: :unprocessable_entity }
-      
-                end
+                redirect_to students_path
             end
-    end
+            else
+                redirect_to students_path, notice: 'User Exists'
+        end
   end
 
   # PATCH/PUT /students/1
@@ -109,10 +94,5 @@ class StudentsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_student
       @student = Student.find(params[:id])
-    end
-
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def student_params
-      params.require(:student).permit(:firstname, :lastname, :email, :password, :password_confirmation, :school)
     end
 end

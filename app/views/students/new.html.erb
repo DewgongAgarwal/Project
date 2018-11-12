@@ -1,5 +1,99 @@
 <h1>New Student</h1>
 
-<%= render 'form', student: @student %>
+Firstname : <input type="text" id = "fname"><br><br>
+Lastname : <input type="text" id = "lname"><br><br>
+Email : <input type="text" id = "email"><br><br>
+Back-Up Password : <input type= "password" id = "pword"><br><br>
+Confirm Password : <input type = "password" id = "cpword"><br><br>
+School :
+<select id = "school">
+		<option value = 0 selected>School</option>
+		<% @school.each do |sch| %>
+			<option value = "<%=sch.id%>"><%= sch.name %></option>
+		<%end%>
+	</select>
+
+<br>
+
+<p onclick = "signin()">Submit</p>
 
 <%= link_to 'Back', students_path %>
+
+
+<script>
+	function signin()
+	{
+		var firstname = document.getElementById("fname").value;
+		var lastname = document.getElementById("lname").value;
+		var email = document.getElementById("email").value;
+		var password = document.getElementById("pword").value;
+		var confirm_password = document.getElementById("cpword").value;
+		var school = document.getElementById("school").value;
+		if (!(firstname))
+			alert ("Enter First Name");
+		else if (!(lastname))
+			alert ("Enter Last Name");
+		else if (!(email))
+			alert ("Enter Email");
+		else if (!(password))
+			alert ("Enter Password");
+		else if (!(confirm_password))
+			alert ("Enter Password Confirmation");
+		else if (school == 0)
+			alert ("Choose one School");
+		else if (password != confirm_password)
+			alert ("Passwords don't Match");
+		else
+		{
+			var key = cryptico.generateRSAKey(email + password, 1024);
+			localStorage.setItem(email+"d", key.d);
+			localStorage.setItem(email+"n", key.n);
+			var data = {firstname: firstname, lastname: lastname, email: email, password: password, school: school + "", keys: bigInt(key.n).toString()};
+			$.ajax({
+            		url: '/students',
+            		type: 'POST',
+					data: data,
+					});
+			give_commkey(email);
+		}
+	}
+	
+	function give_commkey(email)
+	{          
+    var data = {username: email};  
+    var data_returned;      
+	$.ajax({
+            url: '/communicate',
+            type: 'POST',
+            dataType: 'text',
+			data: data,
+			async: false,
+			success: function (data_returned_by_server) {
+				data_returned = data_returned_by_server;
+            	
+        	},
+        	error: function (result) {
+            	alert('error');
+        	}
+			
+            });
+            
+        var x1 = bigInt(data_returned).modPow(bigInt(localStorage.getItem(email+"d")), bigInt(localStorage.getItem(email+"n")));
+        var x2 = x1.toString(16);
+		var y2 = x2.substring(64);
+		x2 = x2.substring(0,64);
+		var r1 = bigInt(y2,16).xor(bigInt(SHA256(x2),16)).toString(16);
+		var message = bigInt(x2,16).xor(bigInt(SHA256(r1),16));
+		var comm_key_padded = message.toString(16);			
+		var comm_key = comm_key_padded.substring(0, 32) + comm_key_padded.substring(42);
+		var checker_message = comm_key_padded.substring(32, 42);
+        if (checker_message == "1001001001")
+		{
+			sessionStorage.setItem(email + "comm_key", comm_key);
+		}
+		
+			
+            
+	}
+	
+</script>

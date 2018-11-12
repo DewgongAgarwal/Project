@@ -41,8 +41,7 @@
 <%= link_to 'My Posts', teacher_post_path(@teacher) %> |
 <%= link_to 'Student Posts', teacher_view_student_post_path(@teacher) %>
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script language="JavaScript" type="text/javascript" src="http://localhost:3000/assets/rsa.self-9c9e3db64700d9507544d0cf380a7b7d5e9cefdbc643749ba25cf8324ec23525.js?body=1"></script>
+
 <script>
 function giveKey() {
 	var key = cryptico.generateRSAKey("<%= @teacher.email%>", 1024);

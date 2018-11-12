@@ -26,14 +26,7 @@
 		<%end%>
 		<td><%= subcategory %></td>
 		<td><%= post.data %> </td>
-		<td><input type = "hidden" id = "data" value = "<%= post.data%>"></td>
-		<td><input type = "hidden" id = "id" value = "<%= post.id%>"></td>
-		<td><input type = "hidden" id = "cat" value = "<%= post.category%>"></td>
-		<td><input type = "hidden" id = "subcat" value = "<%= post.subcategory%>"></td>
-		<td><input type = "hidden" id = "stud_id" value = "<%= post.stud_id%>"></td>
-		<td><input type = "hidden" id = "email" value = "<%= student.email%>"></td> 	
-		<td><p onclick = "sign(3)">Verify</p></td>
-		<td><p onclick = "sign(5)">Reject</p></td>
+		<td><%= link_to 'Check', checker_path(@teacher.id, post.id) %></td>
 		</tr>
 		<% if post.types1 %>
 			<% related_posts = Post.where(stud_id: student.id, category: post.category, status: [2,3,4], types1: post.types1)%>
@@ -72,49 +65,3 @@
 	<%= link_to "Back", teacher_path(@teacher) %>
 	
 </table>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script language="JavaScript" type="text/javascript" src="http://localhost:3000/assets/BigInteger.self-3449fe08e0a1454ccf5a023320cd523f3180d439c1d8ccb7639807df7cdf53b4.js?body=1" ></script>
-<script>
-function sign(indicator) {
-	var data = document.getElementById('data').value
-	var id = document.getElementById('id').value
-	var category = document.getElementById('cat').value
-	var subcategory = document.getElementById('subcat').value
-	var stud_id = document.getElementById('stud_id').value
-	var email = document.getElementById('email').value
-	var post_key = SHA256(stud_id + " " + email + " " + id + " " + data + " " + category +  " " + subcategory); 
-	// document.getElementById("key").innerHTML = post_key;
-	var message = bigInt(post_key,16);	
-	var original_message = bigInt(post_key, 16);
-	var r = SHA256(bigInt.randBetween("-1e100", "1e100").toString(16));
-	var g = bigInt(SHA256(r),16); 
-	var x = g.xor(message).toString(16);
-	var h = bigInt(SHA256(x),16);
-	var y = bigInt(r,16).xor(h);
-	message = new bigInt(x +""+ y.toString(16), 16).toString(16);
-	var encrypted = bigInt(message,16).modPow(bigInt(localStorage.getItem("<%=@teacher.email%>"+"d")),bigInt(localStorage.getItem("<%=@teacher.email%>"+"n")));
-	var data = {id: <%=@teacher.id%>, id2: id, signature: encrypted.toString(), post_key: post_key};
-	
-	if (indicator == 3)
-	{
-		$.ajax({
-            url: '/verified/new',
-            type: 'POST',
-            dataType: 'json',
-			data: data
-            });
-	}
-	else 
-	{
-		$.ajax({
-            url: '/rejected/new',
-            type: 'POST',
-            dataType: 'json',
-			data: data
-            });
-	}
-	document.location.reload(true);
-
-}
-
-</script>

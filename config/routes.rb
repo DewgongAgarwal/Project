@@ -19,6 +19,10 @@ Rails.application.routes.draw do
       
   end
   
+  controller :checker do
+      get '/checker/:id/:id2' => :index, as: :checker
+    end
+  
   controller :communicate do
       post '/communicate' => :index
   end

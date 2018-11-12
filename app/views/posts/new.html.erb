@@ -1,5 +1,51 @@
 <h1>New Post</h1>
-
-<%= render 'form', post: @post %>
+<% if @type %>
+	Type :
+	<select id = "type">
+		<% @type.each do |type| %>
+			<option value = "<%=type.id%>"><%= type.name %></option>
+		<%end%>
+	</select>
+<%end%>
+<br>
+<% if @subcategory %>
+	Subcategory :
+	<select id = "subcategory">
+		<% @subcategory.each do |sc| %>
+			<option value = "<%=sc.id%>"><%= sc.name %></option>
+		<%end%>
+	</select>
+<% end %>
+<br>
+<textarea rows="4" cols="50" id = "data">
+Data</textarea>
+<p onclick = "pass_data()">Sign and Post</p>
 
 <%= link_to 'Back', post_path(session[:user_id]) %>
+
+
+<script>
+	function pass_data()
+	{
+		var type = document.getElementById("type").value;
+		var subcategory = document.getElementById("subcategory").value;
+		var data1 = document.getElementById("data").value;
+		var post_key = SHA256("<%= @stud.id %>" + " " + data + " " + "<%= @category_id.to_i %>" +  " " + subcategory); 
+		var message = bigInt(post_key,16);	
+		var r = SHA256(bigInt.randBetween("-1e100", "1e100").toString(16));
+		var g = bigInt(SHA256(r),16); 
+		var x = g.xor(message).toString(16);
+		var h = bigInt(SHA256(x),16);
+		var y = bigInt(r,16).xor(h);
+		message = new bigInt(x +""+ y.toString(16), 16).toString(16);
+		var encrypted = bigInt(message,16).modPow(bigInt(localStorage.getItem("<%=@stud.email%>"+"d")),bigInt(localStorage.getItem("<%=@stud.email%>"+"n"))).toString();
+		var data_to_sent = {stud_id: "<%=@stud.id%>", category: "<%=@category_id.to_i%>", subcategory: subcategory, types1: type, data: data1, status: 2, postkey: post_key, studentSign: encrypted}; 
+		$.ajax({
+            	url: '/posts',
+            	type: 'POST',
+				data: data_to_sent,
+				});
+		alert ("Success");
+	}
+</script>
+

@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
-    before_action :set_post, only: [:show, :new, :create]
-    skip_before_action :verify_authenticity_token, only: [:set_id]
+    before_action :set_post, only: [:show, :new]
+    skip_before_action :verify_authenticity_token, only: [:set_id, :create]
 #  before_action :set_category, only: [:new]
   # GET /posts
   # GET /posts.json
@@ -22,7 +22,6 @@ class PostsController < ApplicationController
           @testing_type = TType.all
           @activity_type = AType.all
           @other = Post.where(stud_id: @stud, Category: 8)
-          puts($id)
         else
             redirect_to studentlogin_url
       end
@@ -72,11 +71,19 @@ class PostsController < ApplicationController
   # POST /posts.json
   def create
       
-        @post = Post.new(post_params)
-    if $student_islogged_in and not $teacher_islogged_in and not $school_islogged_in and $logger_id == @post.stud_id
-        check_post = Post.where(stud_id: @post.stud_id, category: @post.category, subcategory: @post.subcategory, types1: @post.types1, status: [2,3,4])
+        post = Post.new()
+        post.stud_id = params[:stud_id]
+        post.category = params[:category]
+        post.subcategory = params[:subcategory]
+        post.types1 = params[:types1]
+        post.data = params[:data]
+        post.postkey = params[:postkey]
+        post.status = params[:status]
+        post.studentSign = params[:studentSign]
+    if $student_islogged_in and not $teacher_islogged_in and not $school_islogged_in and $logger_id == post.stud_id
+        check_post = Post.where(stud_id: post.stud_id, category: post.category, subcategory: post.subcategory, types1: post.types1, status: [2,3,4])
         respond_to do |format|
-          if check_post.length == 0 and @post.save
+          if check_post.length == 0 and post.save
               format.html { redirect_to post_path(session[:user_id]), notice: 'Post was successfully created.' }
             format.json { render :show, status: :created, location: @post }
           else
@@ -105,7 +112,4 @@ class PostsController < ApplicationController
 
 
     # Never trust parameters from the scary internet, only allow the white list through.
-    def post_params
-        params.require(:post).permit(:stud_id, :category, :subcategory, :types1, :data, :status)
-    end
 end
