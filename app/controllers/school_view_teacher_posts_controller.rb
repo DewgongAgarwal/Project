@@ -22,7 +22,7 @@ class SchoolViewTeacherPostsController < ApplicationController
             post.save
             redirect_to school_view_teacher_post_path(params[:id])
             else
-            redirect_to schoollogin_url
+            redirect_to schoollogin_url #redirect to login 
             
         end
     end
