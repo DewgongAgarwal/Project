@@ -33,8 +33,7 @@
 		<%end%>
 		<td><%= subcategory %></td>
 		<td><%= post.data %> </td>
-		<td><%= link_to "Verify",verifiedss_new_path(@school.id, post.id)%></td>
-		<td><%= link_to "Reject", rejectedss_new_path(@school.id, post.id)%></tD>
+		<td><%= link_to 'Check', checker_path(@school.id, post.id, 1, 2) %></td>
 		</tr>
 		<% if post.types1 %>
 			<% related_posts = Post.where(stud_id: student.id, category: post.category, status: [2,3,4], types1: post.types1)%>

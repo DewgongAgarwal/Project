@@ -1,17 +1,10 @@
 class TeacherPostsController < ApplicationController
-    before_action :set_teacher_post, only: [:show, :edit, :update, :destroy, :new, :create]
+    before_action :set_teacher_post, only: [:show, :new]
+    skip_before_action :verify_authenticity_token, only: [:set_id, :create]
 
-  # GET /teacher_posts
-  # GET /teacher_posts.json
-#  def index
-#    @teacher_posts = TeacherPost.all
-#  end
-
-  # GET /teacher_posts/1
-  # GET /teacher_posts/1.json
   def show
       
-       if not $student_islogged_in and $teacher_islogged_in and not $school_islogged_in and $logger_id == @teacher.id
+       if not $student_islogged_in and $teacher_islogged_in and not $school_islogged_in and $logger_id == @teacher.id.to_i
               @categories = Category.where(id: [1, 2])
               @profile = Profile.all
               
@@ -38,29 +31,30 @@ class TeacherPostsController < ApplicationController
       end
   end
 
-  # GET /teacher_posts/1/edit
 
-  # POST /teacher_posts
-  # POST /teacher_posts.json
   def create
-      if not $student_islogged_in and $teacher_islogged_in and not $school_islogged_in and $logger_id == @teacher.id
-      
-            @teacher_post = TeacherPost.new(teacher_post_params)
-            check_post = TeacherPost.where(stud_id: @teacher_post.teacher_id, category: @teacher_post.category, subcategory: @teacher_post.subcategory, types1: @teacher_post.types1, status: [2,3,4])
-            respond_to do |format|
-              if @teacher_post.save
-                format.html { redirect_to @teacher_post, notice: 'Teacher post was successfully created.' }
-                format.json { render :show, status: :created, location: @teacher_post }
-              else
-                format.html { render :new }
-                format.json { render json: @teacher_post.errors, status: :unprocessable_entity }
+      post = TeacherPost.new()
+      post.teacher_id = params[:teacher_id]
+      post.category = params[:category]
+      post.subcategory = params[:subcategory]
+      post.data = params[:data]
+      post.postkey = params[:postkey]
+      post.status = params[:status]
+      post.teacherSign = params[:teacherSign]
+      if not $student_islogged_in and $teacher_islogged_in and not $school_islogged_in and $logger_id == post.teacher_id
+          check_post = TeacherPost.where(teacher_id: post.teacher_id, category: post.category, subcategory: post.subcategory, status: [2,3,4])
+          respond_to do |format|
+              if check_post.length == 0 and post.save
+                  format.html { redirect_to teacher_post_path(session[:user_id]), notice: 'Post was successfully created.' }
+                  
+                  else
+                  format.html { redirect_to teacher_post_path(session[:user_id]), notice: 'Similar Post Exists'}
               end
-            end
-    
-    
-    else
-    redirect_to teacherlogin_url
-  end
+          end
+          else
+            redirect_to teacherlogin_url
+      end
+      
     
   end
 
@@ -73,8 +67,4 @@ class TeacherPostsController < ApplicationController
         @teacher = Teacher.where(id: params[:id]).first
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def teacher_post_params
-        params.require(:teacher_post).permit(:teacher_id, :data, :subcategory, :status, :category)
-    end
 end

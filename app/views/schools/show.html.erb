@@ -10,6 +10,11 @@
   <%= @school.email %>
 </p>
 
+<p>
+  	<strong>Public Key:</strong>
+  	<%= @school.keys %>
+</p>
+
 <h3>My Teachers</h3>
 <% @teachers.each do |t| %>
 <%= t.firstname %> <%= t.lastname =%> <br> 
@@ -22,36 +27,15 @@
 <% end %>
 
 <br>
-<% if @school.keys %>
-  	<strong>Public Key:</strong>
-  	<%= @school.keys %>
-	
-	<%else%>
-<p onclick = "giveKey()" >
-<strong>Generate Key:</strong>
-	<p id = "Public Key"></p>
-</p>
-	
-<%end%>
 
 <%= link_to 'Edit', edit_school_path(@school) %> |
-<%= link_to 'Back', schools_path %> |
 <%= link_to 'Student Posts', school_view_student_post_path(@school) %> |
 <%= link_to 'Teacher Posts', school_view_teacher_post_path(@school) %>
-
+<p onclick = "logout()"><%= link_to 'Log Out', schoollogout_url %></p>
 
 <script>
-function giveKey() {
-	var key = cryptico.generateRSAKey("<%= @school.email%>", 1024);
-	document.getElementById("Public Key").innerHTML = key.n.toString();
-	localStorage.setItem("<%= @school.email%>"+"d", key.d);
-	localStorage.getItem("<%=@school.email%>"+"n")
-	$.ajax({
-            url: '/set_key_school',
-            type: 'POST',
-            dataType: 'json',
-			data: {id: <%=@school.id%>, Key: localStorage.getItem("<%=@school.email%>"+"n")}
-            });
-	
-}
+	function logout()
+	{
+		sessionStorage.clear();
+	}
 </script> 

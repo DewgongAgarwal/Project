@@ -2,9 +2,18 @@ Username: <input type="text" id="user" value="Username">
 <p onclick = "check()">Submit</p>
 <script>
 	function check() {
+	
 		var user = document.getElementById("user").value;
-		var data = {username: user};
+		var data = {username: user, type: 1};
 		var x1;
+		
+		if (!(localStorage.getItem(user+"d")))
+            {
+            	
+            	find_user(user);
+            }
+            
+            
 		var data_returned;
 		$.ajax({
             url: '/communicate',
@@ -22,11 +31,7 @@ Username: <input type="text" id="user" value="Username">
 			
             });
             
-            if (!(localStorage.getItem(user+"d")))
-            {
-            	alert ("No Such User");
-            	location.reload(false);
-            }
+            
             
             x1 = bigInt(data_returned).modPow(bigInt(localStorage.getItem(user+"d")),bigInt(localStorage.getItem(user+"n")))
             var x2 = x1.toString(16);
@@ -52,10 +57,46 @@ Username: <input type="text" id="user" value="Username">
         	else
         	{
         		alert("Incorrect Username");
-        		location.reload(true)
+        		location.reload(false);
         	}
         }
         
+        function find_user(user)
+        {
+        	var password = prompt("Password", "");
+        	var key = cryptico.generateRSAKey(user + password, 1024);
+        	var public_key = bigInt(key.n).toString();
+        	var result;
+        	$.ajax({
+        		url: "/exists",
+        		type: "POST",
+        		datatype: "text",
+        		data: {keys: public_key, type: 1},
+        		async: false,
+        		success: function (data_returned_by_server) {
+				result = data_returned_by_server;
+            	
+        	},
+        	error: function (result1) {
+            	alert('error');
+        	}
+        	});
+        	
+        	if (result) 
+        	{
+        		localStorage.setItem(user+"d", key.d);
+        		localStorage.setItem(user+"n", key.n);	
+        	}
+        	else
+        	{
+        		alert("No Such User");
+        		window.location.reload(false);
+        		
+        	}
+        	
+        	
+        	
+        }
             
 </script>
 

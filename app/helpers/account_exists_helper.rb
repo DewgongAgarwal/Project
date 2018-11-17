@@ -1,0 +1,2 @@
+module AccountExistsHelper
+end

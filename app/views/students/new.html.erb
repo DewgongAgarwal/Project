@@ -53,6 +53,7 @@ School :
             		url: '/students',
             		type: 'POST',
 					data: data,
+					async: false,
 					});
 			give_commkey(email);
 		}
@@ -60,7 +61,7 @@ School :
 	
 	function give_commkey(email)
 	{          
-    var data = {username: email};  
+    var data = {username: email, type: 1};  
     var data_returned;      
 	$.ajax({
             url: '/communicate',

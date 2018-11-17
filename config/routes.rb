@@ -12,6 +12,13 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root to: 'home#index'
   
+  controller :account_exists do
+      post '/exists' => :index
+      post '/sch_exists' => :school_exists
+      post '/set_key' => :set_public_key
+  end
+  
+  
   controller :set_key do
       post   '/set_key_teacher' => :teacher, as: :set_key_teacher
       post '/set_key_student' => :student, as: :set_key_student
@@ -20,7 +27,7 @@ Rails.application.routes.draw do
   end
   
   controller :checker do
-      get '/checker/:id/:id2' => :index, as: :checker
+      get '/checker/:id/:id2/:id3/:id4' => :index, as: :checker
     end
   
   controller :communicate do
@@ -28,7 +35,7 @@ Rails.application.routes.draw do
   end
   
   controller :check do
-      get'/check/:id/:id2' => :index, as: :check
+      get'/check/:id/:id2/:id3' => :index, as: :check
       
   end
   
@@ -39,26 +46,11 @@ Rails.application.routes.draw do
       
   end
  
- controller :teacher_view_student_posts do
+ controller :verify_and_reject do
      
-     post 'verified/new' => :verified, as: :verified_new
-     post 'rejected/new' => :rejected, as: :rejected_new
+     post '/signed' => :signed
      
 end
- 
- controller :school_view_student_posts do
-     
-     get 'verifiedss/new/:id/:id2' => :verified, as: :verifiedss_new
-     get 'rejectedss/new/:id/:id2' => :rejected, as: :rejectedss_new
-     
- end
- 
- controller :school_view_teacher_posts do
-     
-     get 'verifiedst/new/:id/:id2' => :verified, as: :verifiedst_new
-     get 'rejectedst/new/:id/:id2' => :rejected, as: :rejectedst_new
-     
- end
  
  controller :posts do
      get    '/post/new/:id/:ids' =>  :new, as: :post_new
@@ -66,7 +58,7 @@ end
  end
  
  controller :teacher_posts do
-     get    '/teacher_post/new/:ids' =>  :new, as: :teacher_post_new
+     get    '/teacher_post/new/:id/:ids' =>  :new, as: :teacher_post_new
      
  end
  

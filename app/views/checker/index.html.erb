@@ -8,8 +8,8 @@
 <script>
 function check() {
 
-		x = "<%=@post.studentSign%>";
-		var public_key = "<%= @student.keys %>";
+		x = "<%= @sign %>";
+		var public_key = "<%= @person.keys %>";
 		var x1 = bigInt(x).modPow(bigInt("3"),bigInt(public_key));	
 		var x2 = x1.toString(16);
 		var y2 = x2.substring(64);
@@ -19,7 +19,7 @@ function check() {
 		document.getElementById("Decrypted").innerHTML = message.toString(16);		
 	if (message.toString(16) == "<%=@post.postkey%>")
 	{
-			alert("Signed by <%= @student.firstname %> <%= @student.lastname%> \nValid Signature");
+			alert("Signed by <%= @person.firstname %> <%= @person.lastname%> \nValid Signature");
 			document.getElementById("Verify").innerHTML = "Verify and Sign";	
 			document.getElementById("Reject").innerHTML = "Reject and Sign";	
 			}
@@ -38,27 +38,25 @@ function sign(indicator) {
 	var h = bigInt(SHA256(x),16);
 	var y = bigInt(r,16).xor(h);
 	message = new bigInt(x +""+ y.toString(16), 16).toString(16);
-	var encrypted = bigInt(message,16).modPow(bigInt(localStorage.getItem("<%=@teacher.email%>"+"d")),bigInt(localStorage.getItem("<%=@teacher.email%>"+"n")));
-	var data = {id: <%=@teacher.id%>, id2: <%= @post.id %>, signature: encrypted.toString()};
+	var encrypted = bigInt(message,16).modPow(bigInt(localStorage.getItem("<%=@signer.email%>"+"d")),bigInt(localStorage.getItem("<%=@signer.email%>"+"n")));
+	var data = {id: <%=@signer.id%>, id2: <%= @post.id %>, signature: encrypted.toString(), status: indicator, id3: "<%= params[:id3]%>", id4: "<%= params[:id4] %>"};
 	
 	if (indicator == 3)
 	{
 		alert("Post Verified");
-		$.ajax({
-            url: '/verified/new',
-            type: 'POST',
-			data: data
-            });
+
 	}
 	else 
 	{
 		alert("Post Rejected");
-		$.ajax({
-            url: '/rejected/new',
+		
+	}
+	
+	$.ajax({
+            url: '/signed',
             type: 'POST',
 			data: data
             });
-	}
 
 }
 

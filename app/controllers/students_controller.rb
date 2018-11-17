@@ -25,14 +25,6 @@ class StudentsController < ApplicationController
     @school = School.all
   end
 
-  # GET /students/1/edit
-  def edit
-      if $student_islogged_in and not $teacher_islogged_in and not $school_islogged_in and $logger_id == @student.id
-          else
-          redirect_to studentlogin_url
-      end
-  end
-
   # POST /students
   # POST /students.json
   def create
@@ -62,33 +54,6 @@ class StudentsController < ApplicationController
         end
   end
 
-  # PATCH/PUT /students/1
-  # PATCH/PUT /students/1.json
-  def update
-    if student_islogged_in and not $teacher_islogged_in and not $school_islogged_in and $logger_id == @student.id
-        respond_to do |format|
-            if @student.update(student_params)
-                format.html { redirect_to @student, notice: 'Student was successfully updated.' }
-                format.json { render :show, status: :ok, location: @student }
-                else
-                format.html { render :edit }
-                format.json { render json: @student.errors, status: :unprocessable_entity }
-            end
-        end
-    else
-    redirect_to student_session_path
-    end
-  end
-
-  # DELETE /students/1
-  # DELETE /students/1.json
-  def destroy
-    @student.destroy
-    respond_to do |format|
-      format.html { redirect_to students_url, notice: 'Student was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

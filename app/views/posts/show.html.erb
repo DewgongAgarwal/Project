@@ -16,8 +16,8 @@
 		<%= @post[0].data %>
 		<% status = Status.where(id: @post[0].status) %>
 		<%= status %>
-		<% if post.sign_id %>
-					<td><%= link_to "Check", check_path(post.id, @stud)%></td>
+		<% if @post[0].sign_id %>
+					<td><%= link_to "Check", check_path(@post[0].id, 1, @stud.id)%></td>
 					<%end%>
 	<%end%>
 
@@ -35,9 +35,9 @@
 			<td><%= @post[0].data %></td>
 			<% status = Status.where(id: @post[0].status) %>
 			<td><%= status[0].name %></td>
-			<% if post.sign_id %>
-				<td><%= link_to "Check", check_path(post.id, @stud)%></td>
-				<%end%>
+			<% if @post[0].sign_id %>
+					<td><%= link_to "Check", check_path(@post[0].id, 1, @stud.id)%></td>
+					<%end%>
 		<% end %>
 			</tr>
 			<% end %>
@@ -60,8 +60,8 @@
 				<td><%= @post[0].data %></td>
 				<% status = Status.where(id: @post[0].status) %>
 				<td><%= status[0].name %></td>
-				<% if post.sign_id %>
-					<td><%= link_to "Check", check_path(post.id, @stud)%></td>
+				<% if @post[0].sign_id %>
+					<td><%= link_to "Check", check_path(@post[0].id, 1, @stud.id)%></td>
 					<%end%>
 				<% end %>
 			</tr>
@@ -81,17 +81,16 @@
 				<td><%= "Not Posted" %></td>
 			<% else %>
 				<td><%= @post[0].data %></td>
-				<% stat = Status.where(id: @post[0].status.to_i) %>
-				<% stat.each do |st|%>
+				<% status = Status.where(id: @post[0].status.to_i) %>
 				<td><%= status[0].name %></td>
-				<% if post.sign_id %>
-					<td><%= link_to "Check", check_path(post.id, @stud)%></td>
+				<% if @post[0].sign_id %>
+					<td><%= link_to "Check", check_path(@post[0].id, 1, @stud.id)%></td>
 					<%end%>
 				<%end%> 
 		 	
 			<% end %>
 		</tr>
-			<% end %>
+			
 			</table>
 			<br><br>
 		
@@ -114,8 +113,8 @@
 					<td><%= post.data %></td>
 					<% status = Status.where(id: post.status) %>
 					<td><%= status[0].name %></td>
-					<% if post.sign_id %>
-					<td><%= link_to "Check", check_path(post.id, @stud)%></td>
+					<% if @post[0].sign_id %>
+					<td><%= link_to "Check", check_path(@post[0].id, 1, @stud.id)%></td>
 					<%end%>
 					</tr>
 		<% end %>
@@ -151,8 +150,8 @@
 					<td><%= post.data %></td>
 					<% status = Status.where(id: post.status) %>
 					<td><%= status[0].name %></td>
-					<% if post.sign_id %>
-					<td><%= link_to "Check", check_path(post.id, @stud)%></td>
+					<% if @post[0].sign_id %>
+					<td><%= link_to "Check", check_path(@post[0].id, 1, @stud.id)%></td>
 					<%end%>
 				</tr>
 		<% end %>
@@ -177,9 +176,9 @@
 	<% else%>
 		<% status = Status.where(id: @post[0].status) %>
 		<tr><td><%= status[0].name %></td><br></tr>
-			<% if post.sign_id %>
-				<td><%= link_to "Check", check_path(post.id, @stud)%></td>
-		<%end%>
+			<% if @post[0].sign_id %>
+					<td><%= link_to "Check", check_path(@post[0].id, 1, @stud.id)%></td>
+					<%end%>
 		<%= @post[0].data %>
 		
 	<%end%>
@@ -192,9 +191,9 @@
 		<td><%= oth.data %></td>
 		<% status = Status.where(id: oth.status) %>
 		<td><%= status[0].name %></td>
-		<% if post.sign_id %>
-		<td><%= link_to "Check", check_path(post.id, @stud)%></td>
-		<%end%>
+		<% if @post[0].sign_id %>
+					<td><%= link_to "Check", check_path(@post[0].id, 1, @stud.id)%></td>
+					<%end%>
 	</tr>
 	<%end%>
 	</table>

@@ -4,7 +4,7 @@
 <br>
 
 <h3><%= ca.name %></h3>
-<%= link_to 'New Post', teacher_post_new_path(ca) %>
+<%= link_to 'New Post', teacher_post_new_path(@teacher.id, ca) %>
 <br><br>
 <% case ca.id %>
 <% when 1%>
@@ -16,6 +16,9 @@
 		<%= @post[0].data %>
 		<% status = Status.where(id: @post[0].status) %>
 		<%= status %>
+		<% if @post[0].sign_id %>
+					<td><%= link_to "Check", check_path(@post[0].id, 2, @teacher.id)%></td>
+					<%end%>
 	<%end%>
 
 	<br><br>
@@ -32,7 +35,9 @@
 			<td><%= @post[0].data %></td>
 			<% status = Status.where(id: @post[0].status) %>
 			<td><%= status[0].name %></td>
-		 	
+			<% if @post[0].sign_id %>
+					<td><%= link_to "Check", check_path(@post[0].id, 2, @teacher.id)%></td>
+					<%end%>	 	 
 		<% end %>
 			</tr>
 			<% end %>

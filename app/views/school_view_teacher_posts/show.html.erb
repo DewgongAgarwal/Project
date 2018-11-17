@@ -20,8 +20,7 @@
 		<%end%>
 		<td><%= subcategory %></td>
 		<td><%= post.data %> </td>
-		<td><%= link_to "Verify", verifiedst_new_path(@school.id, post.id)%></td>
-		<td><%= link_to "Reject",rejectedst_new_path(@school.id, post.id)%></td>
+		<td><%= link_to 'Check', checker_path(@school.id, post.id, 2, 2) %></td>
 		</tr>
 		
 		<% end %>

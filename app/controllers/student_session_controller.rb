@@ -5,7 +5,6 @@ class StudentSessionController < ApplicationController
     
     def create
         student_user = Student.find_by(email: params[:email].downcase)
-#        if student_user && student_user.authenticate(params[:session][:password])
         log_in student_user
         $student_islogged_in = true
         $teacher_islogged_in = false

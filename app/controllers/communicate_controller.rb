@@ -3,13 +3,21 @@ class CommunicateController < ApplicationController
     skip_before_action :verify_authenticity_token
  
   def index
-
-      student = Student.where(email: params[:username])
-      if student.length == 0
+      
+      person = Student.where(email: params[:username])
+      
+      if params[:type].to_i == 2
+          person = Teacher.where(email: params[:username])
+          elsif params[:type].to_i == 3
+          person = School.where(email: params[:username])
+        end
+      
+      if person.length == 0
           render :json => "error"
+          puts("error")
     
     else
-        public_key = student[0].keys
+        public_key = person[0].keys
         commkey = SecureRandom.hex(27)
         commkey_padded = commkey[0 .. 31] + "1001001001" + commkey[32 .. 63]
         r = SecureRandom.hex(32)

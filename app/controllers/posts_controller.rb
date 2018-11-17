@@ -1,15 +1,7 @@
 class PostsController < ApplicationController
     before_action :set_post, only: [:show, :new]
     skip_before_action :verify_authenticity_token, only: [:set_id, :create]
-#  before_action :set_category, only: [:new]
-  # GET /posts
-  # GET /posts.json
-#  def index
-#    @posts = Post.all
-#  end
 
-  # GET /posts/1
-  # GET /posts/1.json
   def show
       if $student_islogged_in and not $teacher_islogged_in and not $school_islogged_in and $logger_id == @stud.id
           @categories = Category.all
@@ -65,10 +57,6 @@ class PostsController < ApplicationController
     
   end
 
-  # GET /posts/1/edit
-
-  # POST /posts
-  # POST /posts.json
   def create
       
         post = Post.new()
@@ -85,10 +73,9 @@ class PostsController < ApplicationController
         respond_to do |format|
           if check_post.length == 0 and post.save
               format.html { redirect_to post_path(session[:user_id]), notice: 'Post was successfully created.' }
-            format.json { render :show, status: :created, location: @post }
           else
           format.html { redirect_to post_path(session[:user_id]), notice: 'Similar Post Exists'}
-            format.json { render json: @post.errors, status: :unprocessable_entity }
+          
           end
         end
     else
@@ -110,6 +97,4 @@ class PostsController < ApplicationController
         @stud = Student.where(id: params[:id]).first
     end
 
-
-    # Never trust parameters from the scary internet, only allow the white list through.
 end

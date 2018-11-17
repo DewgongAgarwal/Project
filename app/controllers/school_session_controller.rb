@@ -1,20 +1,16 @@
 class SchoolSessionController < ApplicationController
+    skip_before_action :verify_authenticity_token
     def new
     end
     
     def create
-        sch_user = School.find_by(email: params[:session][:email].downcase)
-        if sch_user && sch_user.authenticate(params[:session][:password])
-            log_in sch_user
-            $student_islogged_in = false
-            $teacher_islogged_in = false
-            $school_islogged_in = true
-            $logger_id = sch_user.id
-            redirect_to sch_user
-            else
-            flash.now[:warning] = "Invalid-Access Denied"
-            render "new"
-        end
+        sch_user = School.find_by(email: params[:email].downcase)
+        log_in sch_user
+        $student_islogged_in = false
+        $teacher_islogged_in = false
+        $school_islogged_in = true
+        $logger_id = sch_user.id
+        redirect_to sch_user
     end
     
     def destroy
@@ -23,6 +19,7 @@ class SchoolSessionController < ApplicationController
         $teacher_islogged_in = false
         $school_islogged_in = false
         $logger_id = 0
+        $comm_key = 0
         redirect_to schools_path
     end
 end
