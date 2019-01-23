@@ -6,6 +6,8 @@
 			<option value = "<%=type.id%>"><%= type.name %></option>
 		<%end%>
 	</select>
+	<%else%>
+	<input type="hidden" id="type" value="-1">
 <%end%>
 <br>
 <% if @subcategory %>
