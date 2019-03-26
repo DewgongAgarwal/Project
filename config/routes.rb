@@ -18,7 +18,10 @@ Rails.application.routes.draw do
       post '/set_key' => :set_public_key
   end
   
-  
+  controller :give_numbers do
+      post '/give_numbers' => :give_numbers
+  end
+      
   controller :set_key do
       post   '/set_key_teacher' => :teacher, as: :set_key_teacher
       post '/set_key_student' => :student, as: :set_key_student

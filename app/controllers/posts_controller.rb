@@ -68,10 +68,36 @@ class PostsController < ApplicationController
         post.postkey = params[:postkey]
         post.status = params[:status]
         post.studentSign = params[:studentSign]
+        
+        
     if $student_islogged_in and not $teacher_islogged_in and not $school_islogged_in and $logger_id == post.stud_id
         check_post = Post.where(stud_id: post.stud_id, category: post.category, subcategory: post.subcategory, types1: post.types1, status: [2,3,4])
         respond_to do |format|
           if check_post.length == 0 and post.save
+              
+              data1 = PostDataTable1.new()
+              data2 = PostDataTable2.new()
+              data3 = PostDataTable3.new()
+              data4 = PostDataTable4.new()
+              data5 = PostDataTable5.new()
+              
+              poster_type = 1
+              post_id = post.id
+              data1.data = params[:data1]
+              data2.data = params[:data2]
+              data3.data = params[:data3]
+              data4.data = params[:data4]
+              data5.data = params[:data5]
+              
+              data1.post_id = data2.post_id = data3.post_id = data4.post_id = data5.post_id = post_id
+              data1.poster_type = data2.poster_type = data3.poster_type = data4.poster_type = data5.poster_type = poster_type
+              
+              data1.save
+              data2.save
+              data3.save
+              data4.save
+              data5.save
+              
               format.html { redirect_to post_path(session[:user_id]), notice: 'Post was successfully created.' }
           else
           format.html { redirect_to post_path(session[:user_id]), notice: 'Similar Post Exists'}

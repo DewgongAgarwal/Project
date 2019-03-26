@@ -25,7 +25,7 @@
 				<%subcategory = nil %>
 		<%end%>
 		<td><%= subcategory %></td>
-		<td><%= post.data %> </td>
+		<td onclick = "reveal(<%=post.id%>)">Click to View Data</td>
 		<td><%= link_to 'Check', checker_path(@teacher.id, post.id, 1, 1) %></td>
 		</tr>
 		<% if post.types1 %>
@@ -46,7 +46,7 @@
 					<%relsubcategory = nil %>
 				<%end%>
 				<td><%= relsubcategory%></td>
-				<td><%= relpost.data %></td>
+				<td onclick = "reveal(<%=relpost.id%>)">Click to View Data</td>
 				<td><%= @status.find(relpost.status).name %></td>
 				</tr>
 				
@@ -65,3 +65,42 @@
 	<%= link_to "Back", teacher_path(@teacher) %>
 	
 </table>
+
+
+<script>
+
+alert = function(){};
+
+function reveal(a)
+{
+	var data_returned;
+	var data_to_sent = {post_id: a, type: 1};
+		$.ajax({
+            	url: '/give_numbers',
+            	type: 'POST',
+            	datatype: 'text',
+				data: data_to_sent,
+				async: false,
+				success: function (data_returned_by_server) {
+				
+				data_returned = data_returned_by_server;
+            	
+        		},
+        		error: function (result) {
+            		console.log('error');
+        		}
+			
+            });
+            
+            var i;
+            var sum = 0;
+            for (i = 1; i < 6; i++)
+            {
+            	sum += data_returned[i];
+            }
+            
+            confirm(cryptico.decryptAESCBC(data_returned[0], SHA256(sum.toString(16))));            
+				
+	
+}
+</script>

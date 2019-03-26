@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_17_104929) do
+ActiveRecord::Schema.define(version: 2019_03_26_163434) do
 
   create_table "a_types", force: :cascade do |t|
     t.string "name"
@@ -26,6 +26,40 @@ ActiveRecord::Schema.define(version: 2018_11_17_104929) do
 
   create_table "categories", force: :cascade do |t|
     t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "data_table1s", force: :cascade do |t|
+    t.integer "post_id"
+    t.integer "data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "data_table2s", force: :cascade do |t|
+    t.string "post_id"
+    t.string "integer"
+    t.integer "data"
+    t.integer "poster_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "data_table3s", force: :cascade do |t|
+    t.string "post_id"
+    t.string "integer"
+    t.integer "data"
+    t.integer "poster_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "data_table4s", force: :cascade do |t|
+    t.string "post_id"
+    t.string "integer"
+    t.integer "data"
+    t.integer "poster_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -50,6 +84,56 @@ ActiveRecord::Schema.define(version: 2018_11_17_104929) do
 
   create_table "parent2s", force: :cascade do |t|
     t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "post_data_table1s", force: :cascade do |t|
+    t.integer "post_id"
+    t.integer "data"
+    t.integer "poster_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "post_data_table2s", force: :cascade do |t|
+    t.integer "post_id"
+    t.integer "data"
+    t.integer "poster_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "post_data_table3s", force: :cascade do |t|
+    t.integer "post_id"
+    t.integer "data"
+    t.integer "poster_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "post_data_table4s", force: :cascade do |t|
+    t.integer "post_id"
+    t.integer "data"
+    t.integer "poster_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "post_data_table5s", force: :cascade do |t|
+    t.integer "post_id"
+    t.integer "data"
+    t.integer "poster_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "post_table1", force: :cascade do |t|
+    t.integer "post_id"
+    t.integer "data"
+  end
+
+  create_table "post_table1s", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
