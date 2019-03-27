@@ -1,5 +1,4 @@
 class Teacher < ApplicationRecord
-  has_secure_password
   
   def send_token
       generate_token(:token)

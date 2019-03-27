@@ -37,8 +37,8 @@ class LoginTokenController < ApplicationController
            
            
            if user.token == params[:token] and user.timestamp >= 10.minutes.ago
-               user.token = nil
-               user.timestamp = nil
+               user.timestamp = 11.minutes.ago
+               user.save
                @user = user
                
             else
