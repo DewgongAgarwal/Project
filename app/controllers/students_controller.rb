@@ -30,7 +30,6 @@ class StudentsController < ApplicationController
   def create
     student = Student.new()
     student.email = params[:email]
-    student.password = params[:password]
     student.firstname = params[:firstname]
     student.lastname = params[:lastname]
     student.school = params[:school]

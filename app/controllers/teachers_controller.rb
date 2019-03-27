@@ -38,7 +38,6 @@ class TeachersController < ApplicationController
   def create
       teacher = Teacher.new()
       teacher.email = params[:email]
-      teacher.password = params[:password]
       teacher.firstname = params[:firstname]
       teacher.lastname = params[:lastname]
       teacher.school = params[:school]

@@ -3,8 +3,6 @@
 Firstname : <input type="text" id = "fname"><br><br>
 Lastname : <input type="text" id = "lname"><br><br>
 Email : <input type="text" id = "email"><br><br>
-Back-Up Password : <input type= "password" id = "pword"><br><br>
-Confirm Password : <input type = "password" id = "cpword"><br><br>
 School :
 <select id = "school">
 		<option value = 0 selected>School</option>
@@ -26,8 +24,6 @@ School :
 		var firstname = document.getElementById("fname").value;
 		var lastname = document.getElementById("lname").value;
 		var email = document.getElementById("email").value;
-		var password = document.getElementById("pword").value;
-		var confirm_password = document.getElementById("cpword").value;
 		var school = document.getElementById("school").value;
 		if (!(firstname))
 			alert ("Enter First Name");
@@ -35,20 +31,14 @@ School :
 			alert ("Enter Last Name");
 		else if (!(email))
 			alert ("Enter Email");
-		else if (!(password))
-			alert ("Enter Password");
-		else if (!(confirm_password))
-			alert ("Enter Password Confirmation");
 		else if (school == 0)
 			alert ("Choose one School");
-		else if (password != confirm_password)
-			alert ("Passwords don't Match");
 		else
 		{
-			var key = cryptico.generateRSAKey(email + password, 1024);
-			localStorage.setItem(email+"d", key.d);
-			localStorage.setItem(email+"n", key.n);
-			var data = {firstname: firstname, lastname: lastname, email: email, password: password, school: school + "", keys: bigInt(key.n).toString()};
+			var key = cryptico.generateRSAKey(email, 1024);
+			sessionStorage.setItem(email+"d", key.d);
+			sessionStorage.setItem(email+"n", key.n);
+			var data = {firstname: firstname, lastname: lastname, email: email, school: school + "", keys: bigInt(key.n).toString()};
 			$.ajax({
             		url: '/teachers',
             		type: 'POST',
@@ -78,7 +68,7 @@ School :
         	}
 			
             });
-        var x1 = bigInt(data_returned).modPow(bigInt(localStorage.getItem(email+"d")), bigInt(localStorage.getItem(email+"n")));
+        var x1 = bigInt(data_returned).modPow(bigInt(sessionStorage.getItem(email+"d")), bigInt(sessionStorage.getItem(email+"n")));
         var x2 = x1.toString(16);
 		var y2 = x2.substring(64);
 		x2 = x2.substring(0,64);

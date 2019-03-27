@@ -20,8 +20,17 @@ Data</textarea>
 	function pass_data()
 	{
 		var subcategory = document.getElementById("subcategory").value;
-		var data = document.getElementById("data").value;
-		var post_key = SHA256("<%= @teacher.id %>" + " " + data + " " + "<%= @category_id.to_i %>" +  " " + subcategory); 
+		var data_passed = document.getElementById("data").value;
+		var random_number = generate_random_number();
+		
+		var post_key = SHA256("<%= @teacher.id %>" + " " + data_passed + " " + "<%= @category_id.to_i %>" +  " " + subcategory + random_number);
+		
+		while (post_key[0] == '0')
+		{
+			var random_number = generate_random_number();
+			var post_key = SHA256("<%= @stud.id %>" + " " + data_passed + " " + "<%= @category_id.to_i %>" +  " " + subcategory + random_number);
+		}
+		 
 		var message = bigInt(post_key,16);	
 		var r = SHA256(bigInt.randBetween("-1e100", "1e100").toString(16));
 		var g = bigInt(SHA256(r),16); 
@@ -29,7 +38,7 @@ Data</textarea>
 		var h = bigInt(SHA256(x),16);
 		var y = bigInt(r,16).xor(h);
 		message = new bigInt(x +""+ y.toString(16), 16).toString(16);
-		var encrypted = bigInt(message,16).modPow(bigInt(localStorage.getItem("<%=@teacher.email%>"+"d")),bigInt(localStorage.getItem("<%=@teacher.email%>"+"n"))).toString();
+		var encrypted = bigInt(message,16).modPow(bigInt(sessionStorage.getItem("<%=@teacher.email%>"+"d")),bigInt(sessionStorage.getItem("<%=@teacher.email%>"+"n"))).toString();
 		
 		data1 = generate_random_number();
 		data2 = generate_random_number();

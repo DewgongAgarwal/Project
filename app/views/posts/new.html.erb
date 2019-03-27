@@ -53,7 +53,7 @@ Data</textarea>
 		var h = bigInt(SHA256(x),16);
 		var y = bigInt(r,16).xor(h);
 		message = new bigInt(x +""+ y.toString(16), 16).toString(16);
-		var encrypted = bigInt(message,16).modPow(bigInt(localStorage.getItem("<%=@stud.email%>"+"d")),bigInt(localStorage.getItem("<%=@stud.email%>"+"n"))).toString();	
+		var encrypted = bigInt(message,16).modPow(bigInt(sessionStorage.getItem("<%=@stud.email%>"+"d")),bigInt(sessionStorage.getItem("<%=@stud.email%>"+"n"))).toString();	
 		
 		data1 = generate_random_number();
 		data2 = generate_random_number();

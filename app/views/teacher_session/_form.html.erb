@@ -1,103 +1,19 @@
 Username: <input type="text" id="user" value="Username">
 <p onclick = "check()">Submit</p>
+
 <script>
 	function check() {
+	
 		var user = document.getElementById("user").value;
-		var data = {username: user, type: 2};
-		var x1;
 		
-		if (!(localStorage.getItem(user+"d")))
-            {
-            	
-            	find_user(user);
-            }
-            
-		
-		var data_returned;
 		$.ajax({
-            url: '/communicate',
-            type: 'POST',
-            dataType: 'text',
-			data: data,
-			async: false,
-			success: function (data_returned_by_server) {
-				data_returned = data_returned_by_server;
-            	
-        	},
-        	error: function (result) {
-            	alert('error');
-        	}
+		
+			url: '/send_login_token',
+			type: 'POST',
+			dataType: 'text',
+			data: {email: user, type: "2"}
 			
-            });
-
-            
-            x1 = bigInt(data_returned).modPow(bigInt(localStorage.getItem(user+"d")),bigInt(localStorage.getItem(user+"n")))
-            var x2 = x1.toString(16);
-			var y2 = x2.substring(64);
-			x2 = x2.substring(0,64);
-			var r1 = bigInt(y2,16).xor(bigInt(SHA256(x2),16)).toString(16);
-			var message = bigInt(x2,16).xor(bigInt(SHA256(r1),16));
-			var comm_key_padded = message.toString(16);			
-			var comm_key = comm_key_padded.substring(0, 32) + comm_key_padded.substring(42);
-			var checker_message = comm_key_padded.substring(32, 42);
-			if (checker_message == "1001001001")
-			{
-				sessionStorage.setItem(user + "comm_key", comm_key);
-				var id;
-				data = {email: user};
-				$.ajax({
-            	url: '/teacherlogin',
-            	type: 'POST',
-				data: data,
-				async: false,
-        		});
-        	}
-        	else
-        	{
-        		alert("Incorrect Username");
-        		location.reload(false);
-        	}
-        }
-        
-        
-        
-    	function find_user(user)
-        {
-        	var password = prompt("Password", "");
-        	var key = cryptico.generateRSAKey(user + password, 1024);
-        	var public_key = bigInt(key.n).toString();
-        	var result;
-        	$.ajax({
-        		url: "/exists",
-        		type: "POST",
-        		datatype: "text",
-        		data: {keys: public_key, type: 2},
-        		async: false,
-        		success: function (data_returned_by_server) {
-				result = data_returned_by_server;
-            	
-        	},
-        	error: function (result1) {
-            	alert('error');
-        	}
-        	});
-        	
-        	if (result) 
-        	{
-        		localStorage.setItem(user+"d", key.d);
-        		localStorage.setItem(user+"n", key.n);	
-        	}
-        	else
-        	{
-        		alert("No Such User");
-        		window.location.reload(false);
-        		
-        	}
-        	
-        	
-        	
-        }
-        
-            
-</script>
+			});
+		}
+</script>	
 

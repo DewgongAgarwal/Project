@@ -11,12 +11,11 @@ Rails.application.routes.draw do
   resources :students
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root to: 'home#index'
-  
-  controller :account_exists do
-      post '/exists' => :index
-      post '/sch_exists' => :school_exists
-      post '/set_key' => :set_public_key
-  end
+
+  controller :login_token do
+      post '/send_login_token' => :give_login_token
+      get '/login_token/:type/:id/:token' => :check_login_token, as: :check_login_token
+    end
   
   controller :give_numbers do
       post '/give_numbers' => :give_numbers

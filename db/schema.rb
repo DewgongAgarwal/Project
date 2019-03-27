@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_26_163434) do
+ActiveRecord::Schema.define(version: 2019_03_27_055640) do
 
   create_table "a_types", force: :cascade do |t|
     t.string "name"
@@ -171,6 +171,8 @@ ActiveRecord::Schema.define(version: 2019_03_26_163434) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "keys"
+    t.string "token"
+    t.datetime "timestamp"
   end
 
   create_table "statuses", force: :cascade do |t|
@@ -188,6 +190,8 @@ ActiveRecord::Schema.define(version: 2019_03_26_163434) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "keys"
+    t.string "token"
+    t.datetime "timestamp"
   end
 
   create_table "t_types", force: :cascade do |t|
@@ -219,6 +223,8 @@ ActiveRecord::Schema.define(version: 2019_03_26_163434) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "keys"
+    t.string "token"
+    t.datetime "timestamp"
   end
 
   create_table "testings", force: :cascade do |t|
