@@ -55,7 +55,11 @@ Rails.application.routes.draw do
 end
  
  controller :posts do
-     get    '/post/new/:id/:ids' =>  :new, as: :post_new
+     get    '/post/new/:id' =>  :new, as: :post_new
+     post '/give_subcat_posts' => :give_subcategory, as: :give_subcat
+     post '/give_previous_posts' => :give_previous, as: :give_previous
+     post '/give_categories' => :give_categories, as: :give_categories
+     post '/give_previous_posts_bysub' => :give_previous_bysub, as: :give_previous_bysub
      
  end
  

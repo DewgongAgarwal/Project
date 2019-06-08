@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
-    before_action :set_post, only: [:show, :new]
-    skip_before_action :verify_authenticity_token, only: [:set_id, :create]
+    before_action :set_post, only: [:show, :new, :give_previous, :give_previous_bysub]
+    skip_before_action :verify_authenticity_token, only: [:set_id, :create, :give_subcategory, :give_previous, :give_categories, :give_previous_bysub]
 
   def show
       if $student_islogged_in and not $teacher_islogged_in and not $school_islogged_in and $logger_id == @stud.id
@@ -21,34 +21,10 @@ class PostsController < ApplicationController
 
   # GET /posts/new
   def new
-      
+      @category = Category.all
       if $student_islogged_in and not $teacher_islogged_in and not $school_islogged_in and $logger_id == @stud.id
-              @category_id = params[:ids]
-              if @category_id == "1"
-                  @type = nil
-                  @subcategory = nil
-                elsif @category_id == "2"
-                    @type = nil
-                    @subcategory = Profile.all
-                elsif @category_id == "3"
-                    @type = Type.all
-                    @subcategory =  Family.all
-                elsif @category_id == "4"
-                    @type = nil
-                    @subcategory = Education.all
-                elsif @category_id == "5"
-                    @type = TType.all
-                    @subcategory = Testing.all
-                elsif @category_id == "6"
-                    @type = AType.all
-                    @subcategory = Activity.all
-                elsif @category_id == "7"
-                    @type = nil
-                    @subcategory = nil
-                else
-                    @type = nil
-                    @subcategory = nil
-            end
+          
+          
             @post = Post.new
     
     else
@@ -115,12 +91,87 @@ class PostsController < ApplicationController
 
   # DELETE /posts/1
   # DELETE /posts/1.json
+  def give_subcategory()
+      
+      cat_id = params[:id].to_i
+    
+      if cat_id == 1
+          type = nil
+          subcategory = nil
+          elsif cat_id == 2
+          type = nil
+          subcategory = Profile.all
+          elsif cat_id == 3
+          type = Type.all
+          subcategory =  Family.all
+          elsif cat_id == 4
+          type = nil
+          subcategory = Education.all
+          elsif cat_id == 5
+          type = TType.all
+          subcategory = Testing.all
+          elsif cat_id == 6
+          type = AType.all
+          subcategory = Activity.all
+          elsif cat_id == 7
+          type = nil
+          subcategory = nil
+          else
+          type = nil
+          subcategory = nil
+      end
+      subs = Array.new
+      subs_id = Array.new
+      if subcategory
+          
+        
+          subcategory.each do |sub|
+              subs_id.insert(-1, sub.id)
+              subs.insert(-1, sub.name)
+        end
+        end
+          types = Array.new
+          type_id = Array.new
+      if type
+          
+          
+          type.each do |type|
+              type_id.insert(-1, type.id)
+              types.insert(-1, type.name)
+          end
+        
+        end
+      
+      render :json => {subs1:subs, types1:types ,subs_id1:subs_id, types_id1:type_id}
+  end
 
+  
+  def give_previous()
+   render :json => Post.where(stud_id: @stud.id, category: params[:l1].to_i, types1: params[:l2])
+   
+end
+  
+  
+  def give_previous_bysub()
 
+      render :json => Post.where(stud_id: @stud.id, category: params[:l1].to_i, types1: params[:l2], subcategory: params[:l3])
+
+end
+  
+  
+  
+    def give_categories()
+        render :json => Category.all
+    end
+  
     private
     # Use callbacks to share common setup or constraints between actions.
     def set_post
-        @stud = Student.where(id: params[:id]).first
+        @stud = Student.where(id: params[:id].to_i).first
     end
+    
+    
+    
+    
 
 end

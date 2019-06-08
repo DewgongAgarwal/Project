@@ -1,213 +1,239 @@
 <p id="notice"><%= notice %></p>
+<%= link_to 'New Post', post_new_path(@stud.id) %>
 
-<% @categories.each do |ca| %>
-<br>
+<table id = "Posts"></table>
 
-<h2><%= ca.name %></h2>
-<%= link_to 'New Post', post_new_path(@stud.id,ca) %>
-<br><br>
-<% case ca.id %>
-<% when 1%>
-
-	<% @post = Post.where(stud_id: @stud, category: 1)%>
-	<% if @post.length == 0 %>
-		<%= "Not Posted" %>
-	<% else%>
-		<p onclick = "reveal(<%=post.id%>)">Click to View Data</p>
-		<% status = Status.where(id: @post[0].status) %>
-		<%= status %>
-		<% if @post[0].sign_id %>
-					<td><%= link_to "Check", check_path(@post[0].id, 1, @stud.id)%></td>
-					<%end%>
-	<%end%>
-
-	<br><br>
-
-<% when 2 %>
-<table>
-	<% @profile.each do |prof| %> 
-	<tr>
-		<% @post = Post.where(stud_id: @stud, category: 2, subcategory: prof.id)%>
-		<td><%= prof.name %></td>
-		<% if @post.length == 0 %>
-			<td> <%= "Not Posted" %> </td>
-		<% else %>
-			<td onclick = "reveal(<%=post.id%>)">Click to View Data</td>
-			<td><%= status[0].name %></td>
-			<% if @post[0].sign_id %>
-					<td><%= link_to "Check", check_path(@post[0].id, 1, @stud.id)%></td>
-					<%end%>
-		<% end %>
-			</tr>
-			<% end %>
-			
-		</table>
-			<br><br>
-
-<% when 3 %>
-	<% @type.each do |ty| %>
-	
-		<br><h4><%= ty.name %></h4>
-		<table>
-		<% @family.each do |fam| %> 
-		<tr>
-			<% @post = Post.where(stud_id: @stud, category: 3, subcategory: fam.id, types1: ty.id)%>
-			<td><%= fam.name %></td>
-			<% if @post.length == 0 %>
-				<td><%= "Not Posted" %></td>
-			<% else %>
-				<td onclick = "reveal(<%=post.id%>)">Click to View Data</td>
-				<% status = Status.where(id: @post[0].status) %>
-				<td><%= status[0].name %></td>
-				<% if @post[0].sign_id %>
-					<td><%= link_to "Check", check_path(@post[0].id, 1, @stud.id)%></td>
-					<%end%>
-				<% end %>
-			</tr>
-		<% end %>
-		</table>
-	<% end %>
-	<br><br>
-
-<% when 4 %>
-<table>
-	<% @education.each do |edu| %> 
-	<tr>
-		<% @post = Post.where(stud_id: @stud, category: 4, subcategory: edu.id)%>
-		<td><%= edu.name %></td>
-		<% if @post.length == 0 %>
-				
-				<td><%= "Not Posted" %></td>
-			<% else %>
-				<td onclick = "reveal(<%=post.id%>)">Click to View Data</td>
-				<% status = Status.where(id: @post[0].status.to_i) %>
-				<td><%= status[0].name %></td>
-				<% if @post[0].sign_id %>
-					<td><%= link_to "Check", check_path(@post[0].id, 1, @stud.id)%></td>
-					<%end%>
-				<%end%> 
-		 	
-			<% end %>
-		</tr>
-			
-			</table>
-			<br><br>
-		
-<% when 5 %>
-<% @testing_type.each do |ty| %>
-<table>
-	<% if Post.where(types1: ty,stud_id: @stud).length != 0 %>
-	<br><h4><%= ty.name %></h4>
-
-	<% @testing.each do |tes| %> 
-		<tr><% @post = Post.where(stud_id: @stud, category: 5, subcategory: tes.id,types1: ty)%>
-		<% if @post.length == 0 %>
-		 	<td><%= tes.name %></td>
-			<td><%= "Not Posted" %></td>
-			
-			<% else %>
-				<% @post.each do |post| %>
-				<tr>
-					
-					<td><%= tes.name %></td>
-					<td onclick = "reveal(<%=post.id%>)">Click to View Data</td>
-					<% status = Status.where(id: post.status) %>
-					<td><%= status[0].name %></td>
-					<% if post.sign_id %>
-					<td><%= link_to "Check", check_path(post.id, 1, @stud.id)%></td>
-					<%end%>
-					</tr>
-		<% end %>
-		
-		
-			
-		<% end %></tr>
-		
-	<% end %>
-			<%elsif ty.name == "Test No. 1"%>
-				<% @testing.each do |tes| %>
-					<tr><td><%= tes.name%></td><td>Not Posted</td></tr>
-				<% end %>
-		<% end %>
-			</table>
-			<%end%>
-<% when 6 %>
-<% @activity_type.each do |ty| %>
-<table>
-	<% if Post.where(types1: ty,stud_id: @stud).length != 0 %>
-	<br><h4><%= ty.name %></h4>
-
-	<% @activities.each do |activ| %> 
-		<tr><% @post = Post.where(stud_id: @stud, category: 6, subcategory: activ.id,types1: ty)%>
-		<% if @post.length == 0 %>
-		 	<td><%= activ.name %></td>
-			<td><%= "Not Posted" %></td>
-			
-			<% else %>
-				<% @post.each do |post| %>
-				<tr>
-					<td><%= activ.name %></td>
-					<td onclick = "reveal(<%=post.id%>)">Click to View Data</td>
-					<td><%= status[0].name %></td>
-					<% if post.sign_id %>
-					<td><%= link_to "Check", check_path(post.id, 1, @stud.id)%></td>
-					<%end%>
-				</tr>
-		<% end %>
-		
-		
-			
-		<% end %></tr>
-		
-	<% end %>
-			<%elsif ty.id == 1%>
-				<% @activities.each do |activ| %>
-					<tr><td><%= activ.name%></td><td>Not Posted</td></tr>
-				<% end %>
-		<% end %>
-			</table>
-			<%end%>
-			
-<% when 7%>
-	<% @post = Post.where(stud_id: @stud, category: 7)%>
-	<% if @post.length == 0 %>
-		<%= "Not Posted" %>
-	<% else%>
-		<% status = Status.where(id: @post[0].status) %>
-		<tr><td><%= status[0].name %></td><br></tr>
-			<% if @post[0].sign_id %>
-					<td><%= link_to "Check", check_path(@post[0].id, 1, @stud.id)%></td>
-					<%end%>
-		<td onclick = "reveal(<%=post.id%>)">Click to View Data</td>
-		
-	<%end%>
-	<br><br>
-	
-<% else %>
-<table>
-	<% @other.each do |oth|%>
-	<tr>
-		<td onclick = "reveal(<%=post.id%>)">Click to View Data</td>
-		<% status = Status.where(id: oth.status) %>
-		<td><%= status[0].name %></td>
-		<% if @post[0].sign_id %>
-					<td><%= link_to "Check", check_path(@post[0].id, 1, @stud.id)%></td>
-					<%end%>
-	</tr>
-	<%end%>
-	</table>
-	<br><br>
-	
-	
-<% end %>
-<%end%>
 
 <%= link_to 'Back',student_path(@stud) %>
 
 
 <script>
-
 alert = function(){};
+window.onload = show_all_details();
+
+
+function show_all_details()
+{
+	arr = ["", "Unposted", "Unverified", "Verified", "Flagged", "Rejected"];
+	var table = document.getElementById("Posts");
+	$.ajax({
+		url:'/give_categories',
+		type: 'POST',
+		async: false,
+		success: function(data_returned_by_server){
+			categories = data_returned_by_server
+		}	
+	});
+	var i = 0;
+	for (i = 0; i < 8; i++)
+	{
+		var row = table.insertRow(-1);
+		var cell1 = row.insertCell(0);
+		str = categories[i].name.bold();
+		cell1.innerHTML = str.fontsize(3.5);
+		$.ajax({
+            	url: '/give_subcat_posts/',
+            	type: 'POST',
+				data: {id: (i+1)},
+				async: false,
+				success: function (data_returned_by_server) {
+					data_returned = data_returned_by_server
+					}
+					});
+			
+	
+		var row = table.insertRow(-1);
+		
+		if (data_returned.types1.length == 0 && data_returned.subs1.length == 0)
+		{
+			$.ajax({
+            	url: '/give_previous_posts/',
+            	type: 'POST',
+				data: {id: "<%=@stud.id%>", l1: (i+1).toString(10), l2: -1},
+				async: false,
+				success: function (data_returned_by_server) {
+					data_returned1 = data_returned_by_server;				
+				}
+			
+			});
+			if (data_returned1.length == 0)
+			{
+			 	var cell1 = row.insertCell(0);
+				cell1.innerHTML = "Not Posted";
+			}
+			else
+			{
+				for (i = 0; i < data_returned1.length; i++)
+				{
+					var row = table.insertRow(-1);
+				
+  					var cell2 = row.insertCell(0);
+  					var cell3 = row.insertCell(1);
+  			
+  					
+  			
+  					cell2.innerHTML = reveal(data_returned1[i].id);
+  					cell3.innerHTML = arr[data_returned1[i].status];
+  			
+				}
+			}
+		}
+					
+		else if (data_returned.types1.length == 0)
+		{
+			$.ajax({
+            	url: '/give_previous_posts_bysub/',
+            	type: 'POST',
+				data: {id: "<%=@stud.id%>", l1: (i+1).toString(10), l2: -1, l3: data_returned.subs_id1},
+				async: false,
+				success: function (data_returned_by_server) {
+					data_returned1 = data_returned_by_server;	
+				}
+			});			
+				
+			var j = 0;
+			for (j = 0; j < data_returned.subs1.length; j++)
+			{
+				var flag = 0;
+				for (var k = 0; k < data_returned1.length; k++)
+				{
+					
+					if (data_returned1[k].subcategory == data_returned.subs_id1[j])
+					{
+						flag = 1;
+						var row = table.insertRow(-1);
+						var cell1 = row.insertCell(0);
+  						var cell2 = row.insertCell(1);
+  						var cell3 = row.insertCell(2);
+						cell1.innerHTML = data_returned.subs1[j];
+  						cell2.innerHTML = reveal(data_returned1[k].id);
+  						cell3.innerHTML = arr[data_returned1[k].status];
+					}
+					
+				}
+  			
+  				if (flag == 0)
+  				{			
+  					var row = table.insertRow(-1);
+					var cell1 = row.insertCell(0);
+  					var cell2 = row.insertCell(1);
+  					cell1.innerHTML = data_returned.subs1[j];
+  					cell2.innerHTML = "Not Posted";
+  				}
+  			}
+  			}
+  	 			
+  		else
+  		{
+  				var j = 0, k = 0, l = 0;	
+  				for (j = 0; j < data_returned.types1.length; j++)
+  				{
+  					$.ajax({
+            				url: '/give_previous_posts_bysub/',
+            				type: 'POST',
+							data: {id: "<%=@stud.id%>", l1: (i+1).toString(10), l2: data_returned.types_id1[j], l3: data_returned.subs_id1},
+							async: false,
+							success: function (data_returned_by_server) {
+							data_returned1 = data_returned_by_server;	
+							}
+						});
+
+						
+					if (data_returned1.length == 0)
+					{
+						var row = table.insertRow(-1);
+						var cell1 = row.insertCell(0);
+						var row = table.insertRow(-1);
+						var cell1 = row.insertCell(0);
+						var row = table.insertRow(-1);
+						var cell1 = row.insertCell(0);						
+						cell1.innerHTML = data_returned.types1[j].bold();
+						var row = table.insertRow(-1);
+						var cell2 = row.insertCell(0);
+						cell2.innerHTML = "Not Posted";
+						if ((i + 1) == 3)
+							continue;
+						else
+						{
+							break;
+						}
+					}
+					else
+					{
+						var row = table.insertRow(-1);
+						var cell1 = row.insertCell(0);
+						var row = table.insertRow(-1);
+						var row = table.insertRow(-1);
+						var cell1 = row.insertCell(0);
+						cell1.innerHTML = data_returned.types1[j].bold();
+					}
+  					for (k = 0; k < data_returned.subs1.length; k++)
+  					{
+  						var flag = 0;
+  						for (l = 0; l < data_returned1.length; l++)
+  						{
+  						
+  							if (data_returned1[l].subcategory == data_returned.subs_id1[k])
+							{
+								
+								flag = 1;
+								var row = table.insertRow(-1);
+								var cell1 = row.insertCell(0);
+  								var cell2 = row.insertCell(1);
+  								var cell3 = row.insertCell(2);
+								cell1.innerHTML = data_returned.subs1[k];
+  								cell2.innerHTML = reveal(data_returned1[l].id);
+  								cell3.innerHTML = arr[data_returned1[l].status];
+							}
+  						
+  						}
+  						
+  						if (flag == 0)
+						{
+							var row = table.insertRow(-1);
+							var cell1 = row.insertCell(0);
+							var cell2 = row.insertCell(1);
+							cell1.innerHTML = data_returned.subs1[k];
+							cell2.innerHTML = "Not Posted";
+									
+						}
+  						
+  						
+  					
+  					}
+  					
+  					
+  					
+  					
+  					
+  				}
+			
+  				
+  				
+  				
+  				
+  			}
+  			
+  			
+  			
+  			
+  			
+  			
+  			
+  			
+  			
+  			
+		for (var j = 0; j < 5; j ++)
+		{
+			var row = table.insertRow(-1);
+			var cell1 = row.insertCell(0);
+		}
+	}
+}	
+		
+
+
+
 
 function reveal(a)
 {
@@ -237,7 +263,7 @@ function reveal(a)
             	sum += data_returned[i];
             }
             
-            confirm(cryptico.decryptAESCBC(data_returned[0], SHA256(sum.toString(16))));            
+            return (cryptico.decryptAESCBC(data_returned[0], SHA256(sum.toString(16))));            
 				
 	
 }
