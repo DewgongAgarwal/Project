@@ -16,16 +16,20 @@
 </p>
 
 <h3>My Teachers</h3>
+<table>
 <% @teachers.each do |t| %>
-<%= t.firstname %> <%= t.lastname =%> <br> 
-<% end %>
+<tr><td><%= t.firstname %></td> <td><%= t.lastname =%></td><td ><%= button_to 'View Posts', show_teacher_posts_url(id: @school, teacher_id: t.id), method: :post %></td></tr>
 
+<% end %>
+</table>
 
 <h3>My Students</h3>
+<table>
 <% @students.each do |s| %>
-<%= s.firstname %> <%= s.lastname =%><br> 
-<% end %>
+<tr><td><%= s.firstname %></td> <td><%= s.lastname =%></td><td ><%= button_to 'View Posts', show_s_to_s_posts_url(id: @school, stud_id: s.id), method: :post %></td></tr>
 
+<% end %>
+</table>
 <br>
 
 <%= link_to 'Edit', edit_school_path(@school) %> |

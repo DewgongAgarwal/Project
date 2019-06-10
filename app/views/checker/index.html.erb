@@ -39,7 +39,7 @@ function sign(indicator) {
 	var y = bigInt(r,16).xor(h);
 	message = new bigInt(x +""+ y.toString(16), 16).toString(16);
 	var encrypted = bigInt(message,16).modPow(bigInt(sessionStorage.getItem("<%=@signer.email%>"+"d")),bigInt(sessionStorage.getItem("<%=@signer.email%>"+"n")));
-	var data = {id: <%=@signer.id%>, id2: <%= @post.id %>, signature: encrypted.toString(), status: indicator, id3: "<%= params[:id3]%>", id4: "<%= params[:id4] %>"};
+	var data = {id: <%=@signer.id%>,key: "<%=@signer.keys%>", id2: <%= @post.id %>, signature: encrypted.toString(), status: indicator, id3: "<%= params[:id3]%>", id4: "<%= params[:id4] %>"};
 	
 	if (indicator == 3)
 	{

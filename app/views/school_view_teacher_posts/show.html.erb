@@ -2,43 +2,226 @@
 
 <h1>Teacher Posts</h1>
 
-<table>
-	<% @teachers.each do |teacher| %>
-	<tr><td><h4><%=teacher.firstname%></h4></td> <td><h4><%=teacher.lastname%></h4></td></tr>
-		<% posts = TeacherPost.where(teacher_id: teacher.id, status: 2)%>
-		<% if posts.length == 0 %>
-			<td>No Posts</td>
-		<%else%>
-		<% posts.each do |post| %>
-		<%category = Category.find(post.category).name%>
-		<tr><td><%= category%></td>
-		<% case post.category %>
-			<%when 2%>
-				<%subcategory = Profile.find(post.subcategory).name %>
-			<% else %>
-				<%subcategory = nil %>
-		<%end%>
-		<td><%= subcategory %></td>
-		<td onclick = "reveal(<%=post.id%>)">Click to View Data</td>
-		<td><%= link_to 'Check', checker_path(@school.id, post.id, 2, 2) %></td>
-		</tr>
-		
-		<% end %>
-		<tr height = 20px></tr>
-		<td>--------</td>
-		<tr height = 20px></tr>
-		<%end%>
-	<%end%>
-	<%= link_to "Back", school_path(@school) %>
+<table id = "Teacher">
+	
+	
+	
 </table>
+
+<bR>
+<br>
+<table id = "Posts">
+
+</table>
+<br>
+<Br>
+
+<%= link_to "Back", school_path(@school) %>
 <script>
 
 alert = function(){};
+window.onload = give_all_posts();
+var data_returned, data_returned2, categories, data_returned1;;
+
+function give_all_posts()
+{
+	var table = document.getElementById("Posts");
+	table.innerHTML = "";
+	
+	arr = ["", "Unposted", "Unverified", "Verified", "Flagged", "Rejected"];
+	
+	
+	
+	$.ajax({
+		url:'/give_categories',
+		type: 'POST',
+		async: false,
+		success: function(data_returned_by_server){
+			categories = data_returned_by_server
+		}	
+	});
+		
+	
+        	
+    	var table = document.getElementById("Posts");
+    	var row = table.insertRow(-1);
+		var cell1 = row.insertCell(0);
+		var row = table.insertRow(-1);
+		var cell1 = row.insertCell(0);
+		var row = table.insertRow(-1);
+		var cell1 = row.insertCell(0);
+		var row = table.insertRow(-1);
+		var cell1 = row.insertCell(0);
+  		var cell2 = row.insertCell(1);
+  		var cell3 = row.insertCell(2);
+  		var cell4 = row.insertCell(3);
+  		cell1.innerHTML = "<%= @teacher.firstname %>";
+  		cell2.innerHTML = "<%= @teacher.lastname %>";
+  		
+  		$.ajax({
+            	url: '/give_teacher_post_data',
+            	type: 'POST',
+            	datatype: 'text',
+				data: {teacher_id: "<%= @teacher.id%>"},
+				async: false,
+				success: function (data_returned_by_server) {
+				
+				data_returned1 = data_returned_by_server;
+            	
+        		}
+        	});
+        
+    
+    	if (data_returned1.length == 0)
+    	{	
+    		cell4.innerHTML = "No Data Posted";
+    	}
+    	else
+    	{
+    		var j = 0, k = 0;
+    		for (j = 0; j < 2; j++)
+    		{
+    			var flag = 0;
+    			$.ajax({
+            				url: '/give_subcat_posts/',
+            				type: 'POST',
+							data: {id: (j+1)},
+							async: false,
+							success: function (data_returned_by_server) {
+								data_returned2 = data_returned_by_server
+							}
+						});
+				if (data_returned2.subs1.length != 0)
+    			{
+    				var l = 0;
+					for (l = 0; l < data_returned2.subs1.length; l++)
+					{ 
+						
+    					for (k = 0; k < data_returned1.length; k++)
+    					{	
+    					
+    						if (data_returned1[k].category == categories[j].id) 
+    						{						
+    							
+								if (flag == 0)
+								{
+									
+									console.log(data_returned1);
+									console.log(data_returned2);
+									var row = table.insertRow(-1);
+									var cell1 = row.insertCell(0);
+    								cell1.innerHTML = " ------- "; 
+    								var row = table.insertRow(-1);								
+									var cell1 = row.insertCell(0);
+									var cell2 = row.insertCell(1);
+									var cell3 = row.insertCell(2);
+									var cell4 = row.insertCell(3);
+									var cell5 = row.insertCell(4);
+									var cell6 = row.insertCell(5);
+									var cell7 = row.insertCell(6);
+									cell1.innerHTML = categories[data_returned1[k].category - 1].name
+								}	
+								
+						
+								flag = 1;
+								if (data_returned2.subs_id1[l] == data_returned1[k].subcategory)
+								{
+									if (flag == 1)
+									{
+											var row = table.insertRow(-1);
+											var row = table.insertRow(-1);
+											var cell1 = row.insertCell(0);
+											var cell2 = row.insertCell(1);
+											var cell3 = row.insertCell(2);
+											var cell4 = row.insertCell(3);
+											var cell5 = row.insertCell(4);
+											var cell6 = row.insertCell(5);
+											var cell7 = row.insertCell(6);
+											cell2.innerHTML = data_returned2.subs1[data_returned2.subs_id1.indexOf(data_returned1[k].subcategory)]
+											
+									}
+									else
+									{	
+										cell2.innerHTML = data_returned2.subs1[data_returned2.subs_id1.indexOf(data_returned1[k].subcategory)]
+									}
+									
+									
+									
+									
+									cell3.innerHTML = reveal(data_returned1[k].id);
+									cell5.innerHTML = arr[data_returned1[k].status ];
+									if (data_returned1[k].status == 2)
+									{
+										if (signer(data_returned1[k]))
+										{
+											cell6.id = data_returned1[k].id;
+											cell6.name = data_returned1[k].post_key;
+											cell6.onclick = function(){sign(this, 3)};
+											cell6.innerHTML = "Verify";		
+											cell7.id = data_returned1[k].id;	
+											cell7.name = data_returned1[k].post_key;				
+											cell7.onclick = function(){sign(this, 5)};	
+											cell7.innerHTML = "Reject";
+										}
+									}
+								}
+						
+								
+						
+							}
+    					}
+    				}
+    			}
+    			
+    			else 
+    			{
+    				for (k = 0; k < data_returned1.length; k++)
+    					{	
+    					
+    						if (data_returned1[k].category == categories[j].id) 
+    						{
+    							var row = table.insertRow(-1);
+								var cell1 = row.insertCell(0);
+    							cell1.innerHTML = " ------- "; 
+    							var row = table.insertRow(-1);							
+								var cell1 = row.insertCell(0);
+								var cell2 = row.insertCell(1);
+								var cell3 = row.insertCell(2);
+								var cell4 = row.insertCell(3);
+								var cell5 = row.insertCell(4);
+								var cell6 = row.insertCell(5);
+								var cell7 = row.insertCell(6);
+								cell1.innerHTML = categories[data_returned1[k].category - 1].name
+								cell2.innerHTML = cell4.innerHTML = reveal(data_returned1[k].id);
+								cell5.innerHTML = arr[data_returned1[k].status ];
+								if (data_returned1[k].status == 2)
+									{
+										if (signer(data_returned1[k]))
+										{
+											cell6.id = data_returned1[k].id;
+											cell6.name = data_returned1[k].post_key;
+											cell6.onclick = function(){sign(this, 3)};
+											cell6.innerHTML = "Verify";		
+											cell7.id = data_returned1[k].id;	
+											cell7.name = data_returned1[k].post_key;				
+											cell7.onclick = function(){sign(this, 5)};	
+											cell7.innerHTML = "Reject";
+										}
+									}
+    						}
+    					}
+    			}
+    			
+    		}
+    	}
+        	
+}
+
 
 function reveal(a)
 {
 	var data_returned;
-	var data_to_sent = {post_id: a, type: 1};
+	var data_to_sent = {post_id: a, type: 2};
 		$.ajax({
             	url: '/give_numbers',
             	type: 'POST',
@@ -63,8 +246,58 @@ function reveal(a)
             	sum += data_returned[i];
             }
             
-            confirm(cryptico.decryptAESCBC(data_returned[0], SHA256(sum.toString(16))));            
+            return cryptico.decryptAESCBC(data_returned[0], SHA256(sum.toString(16)));            
 				
 	
 }
+
+function signer(post_details)
+{
+	
+	var x = post_details.teacherSign;
+	$.ajax({
+            url: '/give_teacher_public_key',
+            type: 'POST',
+			data: {id: post_details.teacher_id},
+			async: false,
+			success: function (data_returned_by_server) {
+			teacher = data_returned_by_server
+			}
+		});
+	var public_key = bigInt(teacher.keys, 10);
+	
+	var x1 = bigInt(x).modPow(bigInt("3"),bigInt(public_key));	
+	var x2 = x1.toString(16);
+	var y2 = x2.substring(64);
+		x2 = x2.substring(0,64);
+	var r1 = bigInt(y2,16).xor(bigInt(SHA256(x2),16)).toString(16);
+	var message = bigInt(x2,16).xor(bigInt(SHA256(r1),16)); 	
+	
+	return message.toString(16) == post_details.postkey;
+
+}
+
+function sign(post, indicator) {
+	
+	var post_key = post.name;
+	var message = bigInt(post_key,16);	
+	var original_message = bigInt(post_key, 16);
+	var r = SHA256(bigInt.randBetween("-1e100", "1e100").toString(16));
+	var g = bigInt(SHA256(r),16); 
+	var x = g.xor(message).toString(16);
+	var h = bigInt(SHA256(x),16);
+	var y = bigInt(r,16).xor(h);
+	message = new bigInt(x +""+ y.toString(16), 16).toString(16);
+	var encrypted = bigInt(message,16).modPow(bigInt(sessionStorage.getItem("<%=@school.email%>"+"d")),bigInt(sessionStorage.getItem("<%=@school.email%>"+"n")));
+	var data = {id: "<%= @school.id %>",key: "<%=@school.keys%>", id2: post.id, signature: encrypted.toString(), status: indicator, id3: 2, id4: 2};
+
+	
+	$.ajax({
+            url: '/signed',
+            type: 'POST',
+			data: data
+            });
+	give_all_posts();
+}
+
 </script>

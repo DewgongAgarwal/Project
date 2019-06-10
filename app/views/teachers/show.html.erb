@@ -25,14 +25,17 @@
   	<%= @teacher.keys %>
 </p>	
 <p>
+
 <h3>My Students</h3>
+<table>
 <% @students.each do |s| %>
-<%= s.firstname %> <%= s.lastname =%><br> 
+<tr><td><%= s.firstname %></td> <td><%= s.lastname =%></td><td ><%= button_to 'View Posts', show_student_posts_url(id: @teacher, stud_id: s.id), method: :post %></td></tr>
 <% end %>
+</table>
 </p>
 <%= link_to 'Edit', edit_teacher_path(@teacher) %> |
 <%= link_to 'My Posts', teacher_post_path(@teacher) %> |
-<%= link_to 'Student Posts', teacher_view_student_post_path(@teacher) %>
+
 
 <p onclick = "logout()"><%= link_to 'Log Out', teacherlogout_url %></p>
 
@@ -41,6 +44,6 @@
 	{
 		sessionStorage.clear();
 	}
-
+	
 </script>
 

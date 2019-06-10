@@ -4,8 +4,8 @@ Rails.application.routes.draw do
     resources :school_view_teacher_posts
     resources :school_view_student_posts
     resources :teacher_posts, :except => [:new]
-    resources :teacher_view_student_posts
     resources :posts, :except => [:new]
+    resources :teacher_view_student_posts, :except => [:show]
   resources :schools
   resources :teachers
   resources :students
@@ -41,6 +41,13 @@ Rails.application.routes.draw do
       
   end
   
+  controller :students do
+      post 'give_student_public_key' => :public_key, as: :student_public_key
+  end
+  controller :teachers do
+      post 'give_teacher_public_key' => :public_key, as: :teacher_public_key
+  end
+  
   controller :student_session do
       get    '/studentlogin' =>  :new
       post   '/studentlogin' => :create
@@ -64,8 +71,9 @@ end
  end
  
  controller :teacher_posts do
-     get    '/teacher_post/new/:id/:ids' =>  :new, as: :teacher_post_new
-     
+     get    '/teacher_post/new/:id' =>  :new, as: :teacher_post_new
+     post '/give_subcat_teacher_posts' => :give_subcategory, as: :give_teacher_subcat
+     post '/give_teacher_posts_bysub' => :give_previous_bysub, as: :give_previous_teacher_bysub
  end
  
  controller :teacher_session do
@@ -82,5 +90,23 @@ end
       get '/schoollogout' => :destroy
     
   end
+  
+  controller :teacher_view_student_posts do
+    
+    post '/give_post_data' => :give_post_data, as: :give_post_data
+    post '/give_student_data' => :give_student_data, as: :give_student_data
+    post '/show_student_posts' => :show, as: :show_student_posts
+    end
+  
+  controller :school_view_student_posts do
+      
+      post '/show_student_to_school_posts' => :show, as: :show_s_to_s_posts
+  end
+  
+  controller :school_view_teacher_posts do
+      post '/give_teacher_data' => :give_teacher_data, as: :give_teacher_data
+      post '/give_teacher_post_data' => :give_teacher_post_data, as: :give_teacher_post_data
+      post '/show_teacher_posts' => :show, as: :show_teacher_posts
+    end
 
 end

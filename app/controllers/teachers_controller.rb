@@ -1,6 +1,7 @@
 class TeachersController < ApplicationController
   before_action :set_teacher, only: [:show, :edit, :update, :destroy]
   skip_before_action :verify_authenticity_token
+  
 #  respond_to :html, :js
 
   # GET /teachers
@@ -26,6 +27,10 @@ class TeachersController < ApplicationController
       
   end
 
+  def public_key
+      render :json => Teacher.find(params[:id].to_i)
+  end
+  
   # GET /teachers/new
   def new
     @teacher = Teacher.new

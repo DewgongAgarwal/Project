@@ -19,11 +19,17 @@ class StudentsController < ApplicationController
         end
   end
 
+  def public_key
+      render :json=> Student.find(params[:id].to_i)
+    end
+  
   # GET /students/new
   def new
     @student = Student.new
     @school = School.all
   end
+  
+  
 
   # POST /students
   # POST /students.json

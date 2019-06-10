@@ -1,6 +1,118 @@
 <p id="notice"><%= notice %></p>
+<style>
+div.header{
 
-<h1>Apply</h1>
-<%= link_to 'Student', students_path%> | 
-<%= link_to 'Teacher', teachers_path%> | 
-<%= link_to 'School', schools_path%> 
+	background-color: #331030;
+	position:absolute;
+    width:40%;
+    height:100%;
+    top:0px;
+    right:1.3vw;
+
+    
+
+}
+
+div.hea{
+
+	background-color: #331030;
+	position:absolute;
+    width:38%;
+    height:100%;
+    top:0px;
+    left:0;
+    background: linear-gradient(to right, #331030 -20%, #ffffff 100%);
+    opacity: 0.39;
+
+}
+
+div.options {
+	margin: 0;
+	margin-left: 0%;
+	position:absolute;
+	top: 50%;
+	transform: translate(0%,-50%);
+	text-align: center;
+	width: 58%;
+	background-color: transparent;
+
+} 
+
+p.heading {
+  color: #ffffff;
+  margin: 0;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-size: 7.9vw;
+	transform: translate(-50%, -50%);
+	font-family: "Times New Roman", "Arial", "Courier New";
+  
+	
+}
+
+
+p{
+
+	line-height: calc(10px + 2.6vw);
+
+}
+
+.vl_left {
+  border-left: 0.3vw solid white;
+  height: 100%;
+  position: absolute;
+  left: 2.5%;
+  top: 0;
+}
+.vl_right {
+  border-left: 0.3vw solid white;
+  height: 100%;
+  position: absolute;
+  right: 2.5%;
+  top: 0;
+}
+
+p a{
+	
+	color: #331030 !important;
+	position: relative;
+
+	text-decoration: none !important;
+  	
+  	font-size: calc(8px + 1.1vw);
+	font-family: "Times New Roman", "Arial", "Courier New";
+}
+p a:hover{
+	background-color: transparent !important;
+	text-decoration: underline !important;
+}
+
+p a.Diff{
+
+	color: #331030 !important;
+	position: relative;
+	
+	text-decoration: none !important;
+  	
+  	font-size: calc(8px + 2vw);
+	font-family: "Times New Roman", "Arial", "Courier New";
+}
+
+}
+
+</style>
+
+
+<div class = "header"><div class="vl_left"></div><p class= "heading">Apply</p><div class="vl_right"></div></div>
+<div class = "hea"></div>
+<div class = "options">
+<p>
+<a class = "Diff">Are you a : </a><br>
+<a href = "/students">Student</a><br>
+<a href = "/teachers">Teacher</a><br>
+<a href = "/schools">School</a><br>
+</p>
+</div>
+
+

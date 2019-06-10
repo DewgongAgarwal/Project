@@ -2,74 +2,314 @@
 
 <h1>Student Posts</h1>
 
-<table>
-	<% header = "Related: " %>
-	<% @students.each do |student| %>
-	<tr><td><h4><%=student.firstname%></h4></td> <td><h4><%=student.lastname%></h4></td></tr>
-		<% posts = Post.where(stud_id: student.id, category: [4,5,6,7,8], status: 2)%>
-		<% if posts.length == 0 %>
-			<td>No Posts</td>
-
-		<%else%>
-		<% posts.each do |post| %>
-		<%category = Category.find(post.category).name%>
-		<tr><td><%= category%></td>
-		<% case post.category %>
-			<%when 4%>
-				<%subcategory = Education.find(post.subcategory).name %>
-			<%when  5 %>
-				<%subcategory = Testing.find(post.subcategory).name %>
-			<% when 6 %>
-				<%subcategory = Activity.find(post.subcategory).name %>
-			<% else %>
-				<%subcategory = nil %>
-		<%end%>
-		<td><%= subcategory %></td>
-		<td onclick = "reveal(<%=post.id%>)">Click to View Data</td>
-		<td><%= link_to 'Check', checker_path(@teacher.id, post.id, 1, 1) %></td>
-		</tr>
-		<% if post.types1 %>
-			<% related_posts = Post.where(stud_id: student.id, category: post.category, status: [2,3,4], types1: post.types1)%>
-			<%if related_posts.length != 0 %>
-				<td><h5><%= header %></h5></td>
-				<% related_posts.each do |relpost|%>
-				<% if relpost.data != post.data%>
-				<tr><td></td>
-				<% case post.category %>
-				<%when 4%>
-					<%relsubcategory = Education.find(relpost.subcategory).name %>
-				<%when  5 %>
-					<%relsubcategory = Testing.find(relpost.subcategory).name %>
-				<% when 6 %>
-					<%relsubcategory = Activity.find(relpost.subcategory).name %>
-				<% else %>
-					<%relsubcategory = nil %>
-				<%end%>
-				<td><%= relsubcategory%></td>
-				<td onclick = "reveal(<%=relpost.id%>)">Click to View Data</td>
-				<td><%= @status.find(relpost.status).name %></td>
-				</tr>
-				
-				<%end%>
-			<% end %>
-
-		<%end%>
-		<% end %>
-		<tr height = 20px></tr>
-		<td>--------</td>
-		<tr height = 20px></tr>
-		<%end%>
+<table id = "Students">
 	
-	<%end%>
-	<%end%>
-	<%= link_to "Back", teacher_path(@teacher) %>
+	
 	
 </table>
 
+<bR>
+<br>
+<table id = "Posts">
 
+</table>
+<br>
+<Br>
+
+<%= link_to "Back", teacher_path(@teacher) %>
 <script>
 
 alert = function(){};
+window.onload = give_all_posts();
+var data_returned, data_returned2, categories;
+
+function give_all_posts()
+{
+	var table = document.getElementById("Posts");
+	table.innerHTML = ""
+	var data_returned1;
+	arr = ["", "Unposted", "Unverified", "Verified", "Flagged", "Rejected"];
+	
+	
+	
+	$.ajax({
+		url:'/give_categories',
+		type: 'POST',
+		async: false,
+		success: function(data_returned_by_server){
+			categories = data_returned_by_server
+		}	
+	});
+		
+	
+        	
+    	var table = document.getElementById("Posts");
+    	var row = table.insertRow(-1);
+		var cell1 = row.insertCell(0);
+		var row = table.insertRow(-1);
+		var cell1 = row.insertCell(0);
+		var row = table.insertRow(-1);
+		var cell1 = row.insertCell(0);
+		var row = table.insertRow(-1);
+		var cell1 = row.insertCell(0);
+  		var cell2 = row.insertCell(1);
+  		var cell3 = row.insertCell(2);
+  		var cell4 = row.insertCell(3);
+  		cell1.innerHTML = "<%= @student.firstname %>";
+  		cell2.innerHTML = "<%= @student.lastname %>";
+  		
+  		$.ajax({
+            	url: '/give_post_data',
+            	type: 'POST',
+            	datatype: 'text',
+				data: {stud_id: "<%= @student.id %>", type: 2},
+				async: false,
+				success: function (data_returned_by_server) {
+				
+				data_returned1 = data_returned_by_server;
+            	
+        		}
+        	});
+        
+    
+    	if (data_returned1.length == 0)
+    	{	
+    		cell4.innerHTML = "No Data Posted";
+    	}
+    	else
+    	{
+    		var j = 0, k = 0;
+    		for (j = 0; j < 8; j++)
+    		{
+    			var flag = 0;
+    			$.ajax({
+            				url: '/give_subcat_posts/',
+            				type: 'POST',
+							data: {id: (j+1)},
+							async: false,
+							success: function (data_returned_by_server) {
+								data_returned2 = data_returned_by_server
+							}
+						});
+				if (data_returned2.types1.length != 0) 
+				{
+					var l = 0;
+					for (l = 0; l < data_returned2.types1.length; l++)
+					{ 
+						var flag1 = 0;
+    					for (k = 0; k < data_returned1.length; k++)
+    					{	
+    					
+    						if (data_returned1[k].category == categories[j].id) 
+    						{						
+    							
+								if (flag == 0)
+								{
+									var row = table.insertRow(-1);
+									var cell1 = row.insertCell(0);
+    								cell1.innerHTML = " ------- "; 
+    								var row = table.insertRow(-1);	
+    									
+    								
+    													
+									var cell1 = row.insertCell(0);
+									var cell2 = row.insertCell(1);
+									var cell3 = row.insertCell(2);
+									var cell4 = row.insertCell(3);
+									var cell5 = row.insertCell(4);
+									var cell6 = row.insertCell(5);
+									var cell7 = row.insertCell(6);
+									cell1.innerHTML = categories[data_returned1[k].category - 1].name
+								}	
+								
+						
+						
+								if (data_returned2.types_id1[l] == data_returned1[k].types1)
+								{
+									if (flag == 1)
+									{
+										if (flag1 == 0)
+										{
+											var row = table.insertRow(-1);
+											var row = table.insertRow(-1);
+											var cell1 = row.insertCell(0);
+											var cell2 = row.insertCell(1);
+											var cell3 = row.insertCell(2);
+											var cell4 = row.insertCell(3);
+											var cell5 = row.insertCell(4);
+											var cell6 = row.insertCell(5);
+											var cell7 = row.insertCell(6);
+											cell2.innerHTML = data_returned2.types1[data_returned2.types_id1.indexOf(data_returned1[k].types1)]
+											
+										}
+										else
+										{
+											var row = table.insertRow(-1);
+											var cell1 = row.insertCell(0);
+											var cell2 = row.insertCell(1);
+											var cell3 = row.insertCell(2);
+											var cell4 = row.insertCell(3);
+											var cell5 = row.insertCell(4);
+											var cell6 = row.insertCell(5);
+											var cell7 = row.insertCell(6);
+										}
+									}
+									else
+									{	
+										cell2.innerHTML = data_returned2.types1[data_returned2.types_id1.indexOf(data_returned1[k].types1)]
+									}
+									flag = 1;
+									flag1 = 1;
+									
+									cell3.innerHTML = data_returned2.subs1[data_returned2.subs_id1.indexOf(data_returned1[k].subcategory)]
+									cell4.innerHTML = reveal(data_returned1[k].id);
+									cell5.innerHTML = arr[data_returned1[k].status ];
+									if (data_returned1[k].status == 2)
+									{
+										if (signer(data_returned1[k]))
+										{
+											cell6.id = data_returned1[k].id;
+											cell6.name = data_returned1[k].post_key;
+											cell6.onclick = function(){sign(this, 3)};
+											cell6.innerHTML = "Verify";		
+											cell7.id = data_returned1[k].id;	
+											cell7.name = data_returned1[k].post_key;				
+											cell7.onclick = function(){sign(this, 5)};	
+											cell7.innerHTML = "Reject";
+										}
+									}
+								}
+						
+								
+						
+							}
+    					}
+    				}
+    			}
+    			
+    			else if (data_returned2.subs1.length != 0)
+    			{
+    				var l = 0;
+					for (l = 0; l < data_returned2.subs1.length; l++)
+					{ 
+						var flag1 = 0;
+    					for (k = 0; k < data_returned1.length; k++)
+    					{	
+    					
+    						if (data_returned1[k].category == categories[j].id) 
+    						{						
+    							
+								if (flag == 0)
+								{
+									var row = table.insertRow(-1);
+									var cell1 = row.insertCell(0);
+    								cell1.innerHTML = " ------- "; 
+    								var row = table.insertRow(-1);								
+									var cell1 = row.insertCell(0);
+									var cell2 = row.insertCell(1);
+									var cell3 = row.insertCell(2);
+									var cell4 = row.insertCell(3);
+									var cell5 = row.insertCell(4);
+									var cell6 = row.insertCell(5);
+									var cell7 = row.insertCell(6);
+									cell1.innerHTML = categories[data_returned1[k].category - 1].name
+								}	
+								
+						
+						
+								if (data_returned2.subs_id1[l] == data_returned1[k].subcategory)
+								{
+									if (flag == 1)
+									{
+											var row = table.insertRow(-1);
+											var row = table.insertRow(-1);
+											var cell1 = row.insertCell(0);
+											var cell2 = row.insertCell(1);
+											var cell3 = row.insertCell(2);
+											var cell4 = row.insertCell(3);
+											var cell5 = row.insertCell(4);
+											var cell6 = row.insertCell(5);
+											var cell7 = row.insertCell(6);
+											cell2.innerHTML = data_returned2.subs1[data_returned2.subs_id1.indexOf(data_returned1[k].subcategory)]
+											
+									}
+									else
+									{	
+										cell2.innerHTML = data_returned2.subs1[data_returned2.subs_id1.indexOf(data_returned1[k].subcategory)]
+									}
+									flag = 1;
+									
+									
+									
+									cell3.innerHTML = reveal(data_returned1[k].id);
+									cell5.innerHTML = arr[data_returned1[k].status ];
+									if (data_returned1[k].status == 2)
+									{
+										if (signer(data_returned1[k]))
+										{
+											cell6.id = data_returned1[k].id;
+											cell6.name = data_returned1[k].post_key;
+											cell6.onclick = function(){sign(this, 3)};
+											cell6.innerHTML = "Verify";		
+											cell7.id = data_returned1[k].id;	
+											cell7.name = data_returned1[k].post_key;				
+											cell7.onclick = function(){sign(this, 5)};	
+											cell7.innerHTML = "Reject";
+										}
+									}
+								}
+						
+								
+						
+							}
+    					}
+    				}
+    			}
+    			
+    			else 
+    			{
+    				for (k = 0; k < data_returned1.length; k++)
+    					{	
+    					
+    						if (data_returned1[k].category == categories[j].id) 
+    						{
+    							var row = table.insertRow(-1);
+								var cell1 = row.insertCell(0);
+    							cell1.innerHTML = " ------- "; 
+    							var row = table.insertRow(-1);							
+								var cell1 = row.insertCell(0);
+								var cell2 = row.insertCell(1);
+								var cell3 = row.insertCell(2);
+								var cell4 = row.insertCell(3);
+								var cell5 = row.insertCell(4);
+								var cell6 = row.insertCell(5);
+								var cell7 = row.insertCell(6);
+								cell1.innerHTML = categories[data_returned1[k].category - 1].name
+								cell2.innerHTML = cell4.innerHTML = reveal(data_returned1[k].id);
+								cell5.innerHTML = arr[data_returned1[k].status ];
+								if (data_returned1[k].status == 2)
+									{
+										if (signer(data_returned1[k]))
+										{
+											cell6.id = data_returned1[k].id;
+											cell6.name = data_returned1[k].post_key;
+											cell6.onclick = function(){sign(this, 3)};
+											cell6.innerHTML = "Verify";		
+											cell7.id = data_returned1[k].id;	
+											cell7.name = data_returned1[k].post_key;				
+											cell7.onclick = function(){sign(this, 5)};	
+											cell7.innerHTML = "Reject";
+										}
+									}
+    						}
+    					}
+    			}
+    			
+    		}
+    	}
+        	
+}
+
 
 function reveal(a)
 {
@@ -99,8 +339,62 @@ function reveal(a)
             	sum += data_returned[i];
             }
             
-            confirm(cryptico.decryptAESCBC(data_returned[0], SHA256(sum.toString(16))));            
+            return cryptico.decryptAESCBC(data_returned[0], SHA256(sum.toString(16)));            
 				
 	
 }
+
+function signer(post_details)
+{
+
+	var x = post_details.studentSign;
+	$.ajax({
+            url: '/give_student_public_key',
+            type: 'POST',
+			data: {id: post_details.stud_id},
+			async: false,
+			success: function (data_returned_by_server) {
+			student = data_returned_by_server
+			}
+		});
+	
+	var public_key = bigInt(student.keys, 10);
+	
+	var x1 = bigInt(x).modPow(bigInt("3"),bigInt(public_key));	
+	var x2 = x1.toString(16);
+	var y2 = x2.substring(64);
+		x2 = x2.substring(0,64);
+	var r1 = bigInt(y2,16).xor(bigInt(SHA256(x2),16)).toString(16);
+	var message = bigInt(x2,16).xor(bigInt(SHA256(r1),16)); 	
+	
+	return message.toString(16) == post_details.postkey;
+
+}
+
+
+
+function sign(post, indicator) {
+	
+	var post_key = post.name;
+	var message = bigInt(post_key,16);	
+	var original_message = bigInt(post_key, 16);
+	var r = SHA256(bigInt.randBetween("-1e100", "1e100").toString(16));
+	var g = bigInt(SHA256(r),16); 
+	var x = g.xor(message).toString(16);
+	var h = bigInt(SHA256(x),16);
+	var y = bigInt(r,16).xor(h);
+	message = new bigInt(x +""+ y.toString(16), 16).toString(16);
+	var encrypted = bigInt(message,16).modPow(bigInt(sessionStorage.getItem("<%=@teacher.email%>"+"d")),bigInt(sessionStorage.getItem("<%=@teacher.email%>"+"n")));
+	var data = {id: "<%= @teacher.id %>",key: "<%=@teacher.keys%>", id2: post.id, signature: encrypted.toString(), status: indicator, id3: 1, id4: 1};
+
+	
+	$.ajax({
+            url: '/signed',
+            type: 'POST',
+			data: data,
+			async: false,
+            });
+	give_all_posts();
+}
+
 </script>

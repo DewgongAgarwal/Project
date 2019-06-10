@@ -184,6 +184,13 @@ function show_all_details()
 								cell1.innerHTML = data_returned.subs1[k];
   								cell2.innerHTML = reveal(data_returned1[l].id);
   								cell3.innerHTML = arr[data_returned1[l].status];
+  								if (data_returned1[l].status > 2)
+  								{
+  									var cell4 = row.insertCell(3);
+  									 
+  									cell4.innerHTML = signer(data_returned1[l]); 
+  									
+  								}
 							}
   						
   						}
@@ -231,6 +238,27 @@ function show_all_details()
 	}
 }	
 		
+
+
+function signer(post_details)
+{
+
+	var x = post_details.signature;
+	var public_key = bigInt(post_details.sign_id, 10);
+	
+	var x1 = bigInt(x).modPow(bigInt("3"),bigInt(public_key));	
+	var x2 = x1.toString(16);
+	var y2 = x2.substring(64);
+		x2 = x2.substring(0,64);
+	var r1 = bigInt(y2,16).xor(bigInt(SHA256(x2),16)).toString(16);
+	var message = bigInt(x2,16).xor(bigInt(SHA256(r1),16)); 	
+	
+	if (message.toString(16) == post_details.postkey)
+			return "Signed by Verified Entity";
+	else
+		return "Unauthorised Verifier";
+
+}
 
 
 

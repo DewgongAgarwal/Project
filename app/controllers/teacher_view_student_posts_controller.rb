@@ -1,18 +1,34 @@
 class TeacherViewStudentPostsController < ApplicationController
     before_action :set_post, only: [:show]
-    skip_before_action :verify_authenticity_token, only: [:verified, :rejected]
+    skip_before_action :verify_authenticity_token
     def show
-        if not $student_islogged_in and $teacher_islogged_in and not $school_islogged_in and $logger_id == @teacher.id
-            @students = Student.where(school: @teacher.school)
-            @status = Status.all
-        else
-        redirect_to teacherlogin_url
-        end
+        @student = Student.find(params[:stud_id].to_i)
+
+    end
+    
+    
+    def give_student_data
+        
+        school_id = params[:school].to_i
+        student = Student.where(school: school_id)
+        render :json => student
         
     end
     
+    def give_post_data
+       
+       student_id = params[:stud_id].to_i
+       if params[:type].to_i == 2
+           render :json => Post.where(stud_id: student_id, category: [4,5,6,7,8])
+        else
+            render :json => Post.where(stud_id: student_id)
+       end
+    end
+    
+    private
+    
     def set_post
-        @teacher = Teacher.find(params[:id])
+        @teacher = Teacher.find(params[:id].to_i)
     end
     
 end
