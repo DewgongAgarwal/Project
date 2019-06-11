@@ -4,9 +4,12 @@ class TeacherPostsController < ApplicationController
 
   def show
       
-      if session[:user_id] == params[:id].to_i
+      if not $student_islogged_in and $teacher_islogged_in and not $school_islogged_in and $logger_id == @teacher.id
         @categories = Category.where(id: [1, 2])
         @profile = Profile.all
+        
+        
+        
         
         else
             redirect_to root_path
@@ -16,8 +19,21 @@ class TeacherPostsController < ApplicationController
 
   # GET /teacher_posts/new
   def new
-    @category = Category.where(id:[1,2])
-    @teacher_post = TeacherPost.new
+      if not $student_islogged_in and $teacher_islogged_in and not $school_islogged_in and $logger_id == @teacher.id
+        @category = Category.where(id:[1,2])
+        account_post = TeacherPost.where(teacher_id: @teacher_id, category: 1, status: 3)
+        if account_post.length != 1
+            @category = Category.where(id: 1)
+        end
+        
+        
+        @teacher_post = TeacherPost.new
+        
+        else
+        redirect_to root_path
+        
+    end
+  
   end
 
 

@@ -1,5 +1,5 @@
 <p id="notice"><%= notice %></p>
-<%= link_to 'New Post', teacher_post_new_path(id: @teacher.id), method: :post %>
+<%= link_to 'New Post', teacher_post_new_path(@teacher.id)%>
 
 <table id = "Posts"></table>
 
@@ -73,6 +73,18 @@ function show_all_details()
   			
 				}
 			}
+			
+			if (i == 0)
+			{	
+				length = data_returned1.length;
+				if (length == 0)
+				{
+					break;
+				}	
+				else if (data_returned1[length - 1].status != 3)
+					break;
+			}
+			
 		}
 					
 		else

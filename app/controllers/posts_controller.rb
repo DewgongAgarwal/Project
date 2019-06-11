@@ -24,8 +24,11 @@ class PostsController < ApplicationController
       @category = Category.all
       if $student_islogged_in and not $teacher_islogged_in and not $school_islogged_in and $logger_id == @stud.id
           
-          
-            @post = Post.new
+          account_post = Post.where(stud_id: @stud_id, category: 1, status: 3)
+          if account_post.length != 1
+              @category = Category.where(id: 1)
+            end
+        @post = Post.new
     
     else
     redirect_to studentlogin_url

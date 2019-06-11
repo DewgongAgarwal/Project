@@ -20,8 +20,42 @@
 <script>
 
 alert = function(){};
-window.onload = give_all_posts();
+window.onload = verify_account();
 var data_returned, data_returned2, categories;
+
+
+function verify_account()
+{
+	var data_returned1;
+	$.ajax({
+            	url: '/give_teacher_posts_bysub/',
+            	type: 'POST',
+				data: {id: "<%=@teacher.id%>", l1: "1", l2: -1},
+				async: false,
+				success: function (data_returned_by_server) {
+					data_returned1 = data_returned_by_server;				
+				}
+				});
+			console.log(data_returned1);
+			length = data_returned1.length;
+			if (length == 0)
+			{
+				confirm("Verify Your Account First");
+				
+			}	
+			else if (data_returned1[length - 1].status != 3)
+			{
+				confirm("Verify Your Account First");
+				
+			}
+			else
+			{
+				give_all_posts();
+			}
+				
+				
+				
+}
 
 function give_all_posts()
 {

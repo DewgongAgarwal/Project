@@ -56,6 +56,9 @@ function show_all_details()
 				}
 			
 			});
+			
+			
+			
 			if (data_returned1.length == 0)
 			{
 			 	var cell1 = row.insertCell(0);
@@ -76,6 +79,17 @@ function show_all_details()
   					cell3.innerHTML = arr[data_returned1[i].status];
   			
 				}
+			}
+			
+			if (i == 0)
+			{	
+				length = data_returned1.length;
+				if (length == 0)
+				{
+					break;
+				}	
+				else if (data_returned1[length - 1].status != 3)
+					break;
 			}
 		}
 					
