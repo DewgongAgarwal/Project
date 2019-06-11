@@ -19,12 +19,7 @@
   <strong>School:</strong>
   <%= @student.school %>
 </p>
-<p>
-  	<strong>Public Key:</strong>
-  	<%= @student.keys %>
-</p>
 
-<%= link_to 'Edit', edit_student_path(@student) %> |
 <%= link_to 'Posts', post_path(@student) %>
 <p onclick = "logout()"><%= link_to 'Log Out', studentlogout_url %></p>
 

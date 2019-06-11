@@ -21,10 +21,6 @@
 </p>
 
 <p>
-  	<strong>Public Key:</strong>
-  	<%= @teacher.keys %>
-</p>	
-<p>
 
 <h3>My Students</h3>
 <table>
@@ -33,7 +29,7 @@
 <% end %>
 </table>
 </p>
-<%= link_to 'Edit', edit_teacher_path(@teacher) %> |
+
 <%= link_to 'My Posts', teacher_post_path(@teacher) %> |
 
 
