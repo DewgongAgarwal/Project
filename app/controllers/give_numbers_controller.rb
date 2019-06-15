@@ -14,14 +14,12 @@ def give_numbers
         post = TeacherPost.find(post_id).data
     end
     
-    data1 = PostDataTable1.where(post_id: post_id, poster_type: type)[0].data
-    data2 = PostDataTable2.where(post_id: post_id, poster_type: type)[0].data
-    data3 = PostDataTable3.where(post_id: post_id, poster_type: type)[0].data
-    data4 = PostDataTable4.where(post_id: post_id, poster_type: type)[0].data
-    data5 = PostDataTable5.where(post_id: post_id, poster_type: type)[0].data
-
-    puts([post, data1, data2, data3, data4, data5])
-    render :json => [post, data1, data2, data3, data4, data5]
+    point1 = PostDataTable1.where(post_id: post_id, poster_type: type)[0]
+    point2 = PostDataTable2.where(post_id: post_id, poster_type: type)[0]
+    point3 = PostDataTable3.where(post_id: post_id, poster_type: type)[0]
+    point4 = PostDataTable4.where(post_id: post_id, poster_type: type)[0]
+    point5 = PostDataTable5.where(post_id: post_id, poster_type: type)[0]
+    render :json => [post, [point1.data, point1.y], [point2.data, point2.y], [point3.data, point3.y], [point4.data, point4.y], [point5.data, point5.y]]
 end
     
 end

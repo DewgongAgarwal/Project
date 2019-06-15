@@ -17,6 +17,25 @@ class TeacherPostsController < ApplicationController
   # GET /teacher_posts/new
   def new
     @category = Category.where(id:[1,2])
+    if not $student_islogged_in and $teacher_islogged_in and not $school_islogged_in and $logger_id == @teacher.id
+        
+        account_posts = TeacherPost.where(category: 1, teacher_id: @teacher.id)
+        if not account_posts.length == 0
+            if account_posts.last.status == 2
+                redirect_to teacher_post_path(@teacher), notice: 'Account not Verified Yet'
+                elsif not account_posts.last.status == 3
+                @category = Category.where(id: 1)
+            end
+            
+            else
+            @category = Category.where(id: 1)
+            
+            
+        end
+        else
+        redirect_to teacherlogin_url
+    end
+
     @teacher_post = TeacherPost.new
   end
 
@@ -43,11 +62,18 @@ class TeacherPostsController < ApplicationController
               
               poster_type = 2
               post_id = post.id
-              data1.data = params[:data1]
-              data2.data = params[:data2]
-              data3.data = params[:data3]
-              data4.data = params[:data4]
-              data5.data = params[:data5]
+              
+              data1.data = params[:data1][0].to_i
+              data2.data = params[:data2][0].to_i
+              data3.data = params[:data3][0].to_i
+              data4.data = params[:data4][0].to_i
+              data5.data = params[:data5][0].to_i
+              
+              data1.y = params[:data1][1]
+              data2.y = params[:data2][1]
+              data3.y = params[:data3][1]
+              data4.y = params[:data4][1]
+              data5.y = params[:data5][1]
               
               data1.post_id = data2.post_id = data3.post_id = data4.post_id = data5.post_id = post_id
               data1.poster_type = data2.poster_type = data3.poster_type = data4.poster_type = data5.poster_type = poster_type

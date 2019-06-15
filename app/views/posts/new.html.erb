@@ -160,16 +160,18 @@ Data</textarea>
 		{
 			document.getElementById("Related_Posts").style.display = "none";
 		}
+
 		var table = document.getElementById("Related");
 		table.innerHTML = ""
-		for (i = 0; i < data_returned1.length; i++)
-		{
+		for (var i = 0; i < data_returned1.length; i++)
+		{	
+		
 			var row = table.insertRow(-1);
 			var cell1 = row.insertCell(0);
   			var cell2 = row.insertCell(1);
   			var cell3 = row.insertCell(2);
-  			var search_num = data_returned1[i].subcategory
-  			var index = 0
+  			var search_num = data_returned1[i].subcategory;
+  			var index = 0;
   			for (j = 0; j < data_returned.subs_id1.length; j++)
   			{
   				if (data_returned.subs_id1[j] == search_num)
@@ -180,11 +182,13 @@ Data</textarea>
   			}
   			
   			arr = ["", "Unposted", "Unverified", "Verified", "Flagged", "Rejected"];
+
+  			data_returned3 = data_returned1[i];
   			
+  	
   			cell1.innerHTML = data_returned.subs1[index];
-  			cell2.innerHTML = reveal(data_returned1[i].id);
-  			cell3.innerHTML = arr[data_returned1[i].status];
-  			
+  			cell2.innerHTML = reveal(data_returned1[i].id, 1);
+  			cell3.innerHTML = arr[data_returned3.status];
 		}
 		
 	}
@@ -216,15 +220,15 @@ Data</textarea>
 		}
 		var table = document.getElementById("Related");
 		table.innerHTML = ""
-		for (i = 0; i < data_returned2.length; i++)
+		for (var i = 0; i < data_returned2.length; i++)
 		{
 			var row = table.insertRow(-1);
 			var cell1 = row.insertCell(0);
   			var cell2 = row.insertCell(1);
   			var cell3 = row.insertCell(2);
-  			var search_num = data_returned2[i].subcategory
-  			var index = 0
-  			for (j = 0; j < data_returned.subs_id1.length; j++)
+  			var search_num = data_returned2[i].subcategory;
+  			var index = 0;
+  			for (var j = 0; j < data_returned.subs_id1.length; j++)
   			{
   				if (data_returned.subs_id1[j] == search_num)
   				{
@@ -234,10 +238,10 @@ Data</textarea>
   			}
   			
   			arr = ["", "Unposted", "Unverified", "Verified", "Flagged", "Rejected"];
-  			
+  			data_returned3 = data_returned2[i];
   			cell1.innerHTML = data_returned.subs1[index];
-  			cell2.innerHTML = reveal(data_returned2[i].id);
-  			cell3.innerHTML = arr[data_returned2[i].status];
+  			cell2.innerHTML = reveal(data_returned2[i].id, 1);
+  			cell3.innerHTML = arr[data_returned3.status];
   			
 		}
 		
@@ -255,37 +259,31 @@ Data</textarea>
 		var subcategory = document.getElementById("subcategory").value;
 		var data_passed = document.getElementById("data").value;
 		
-		var random_number = generate_random_number();
+		var random_number = generate_random_number(100001);
 		
 		var post_key = SHA256("<%= @stud.id %>" + " " + data_passed + " " + category +  " " + subcategory + random_number);
 		
 		while (post_key[0] == '0')
 		{
-			var random_number = generate_random_number();
+			var random_number = generate_random_number(100001);
 			var post_key = SHA256("<%= @stud.id %>" + " " + data_passed + " " + category +  " " + subcategory + random_number);
 		}
 		 
-		var message = bigInt(post_key,16);	
-		var r = SHA256(bigInt.randBetween("-1e100", "1e100").toString(16));
-		var g = bigInt(SHA256(r),16); 
-		var x = g.xor(message).toString(16);
-		var h = bigInt(SHA256(x),16);
-		var y = bigInt(r,16).xor(h);
-		message = new bigInt(x +""+ y.toString(16), 16).toString(16);
-		var encrypted = bigInt(message,16).modPow(bigInt(sessionStorage.getItem("<%=@stud.email%>"+"d")),bigInt(sessionStorage.getItem("<%=@stud.email%>"+"n"))).toString();	
 		
-		data1 = generate_random_number();
-		data2 = generate_random_number();
-		data3 = generate_random_number();
-		data4 = generate_random_number();
-		data5 = generate_random_number();
+		var encrypted = RSA_Sign(post_key, "<%= @stud.email %>")
 		
-		key = data1 + data2 + data3 + data4 + data5;
+		var key = bigInt.randBetween(0, "1e1000");
 		key = key.toString(16);
 		key = SHA256(key);
 		
 		data = cryptico.encryptAESCBC(data_passed, key);
 		
+		coordinates = give_polynomial(secret_sharing_k, secret_sharing_n, bigInt(key, 16).toString(10));
+		data1 = coordinates[0];
+		data2 = coordinates[1];
+		data3 = coordinates[2];
+		data4 = coordinates[3];
+		data5 = coordinates[4];
 		
 		var data_to_sent = {stud_id: "<%=@stud.id%>", category: category, subcategory: subcategory, types1: type, data: data, status: 2, postkey: post_key, studentSign: encrypted, data1: data1, data2: data2, data3: data3, data4: data4, data5: data5 }; 
 		$.ajax({
@@ -296,45 +294,9 @@ Data</textarea>
 		confirm("Success");
 	}
 	
-	function generate_random_number()
-	{
-		p = Math.floor(Math.random() * (100001));
-		return p - 5000;
-	}
 	
 	
-	function reveal(a)
-{
-	var data_returned;
-	var data_to_sent = {post_id: a, type: 1};
-		$.ajax({
-            	url: '/give_numbers',
-            	type: 'POST',
-            	datatype: 'text',
-				data: data_to_sent,
-				async: false,
-				success: function (data_returned_by_server) {
-				
-				data_returned = data_returned_by_server;
-            	
-        		},
-        		error: function (result) {
-            		console.log('error');
-        		}
-			
-            });
-            
-            var i;
-            var sum = 0;
-            for (i = 1; i < 6; i++)
-            {
-            	sum += data_returned[i];
-            }
-            
-            return cryptico.decryptAESCBC(data_returned[0], SHA256(sum.toString(16)));            
-				
-	
-}
+
 	
 </script>
 

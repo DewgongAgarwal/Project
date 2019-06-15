@@ -17,7 +17,7 @@
 
 <p>
   <strong>School:</strong>
-  <%= @teacher.school %>
+  <%= School.find(@teacher.school).name %>
 </p>
 
 <p>
@@ -25,7 +25,12 @@
 <h3>My Students</h3>
 <table>
 <% @students.each do |s| %>
-<tr><td><%= s.firstname %></td> <td><%= s.lastname =%></td><td ><%= button_to 'View Posts', show_student_posts_url(id: @teacher, stud_id: s.id), method: :post %></td></tr>
+<tr><td><%= s.firstname %></td> <td><%= s.lastname =%></td>
+<% if TeacherPost.where(teacher_id: @teacher.id, category: 1, status: 3).length != 0 %>
+<td><%= button_to 'View Posts', show_student_posts_url(id: @teacher, stud_id: s.id), method: :post %></td>
+<%end%>
+</tr>
+
 <% end %>
 </table>
 </p>

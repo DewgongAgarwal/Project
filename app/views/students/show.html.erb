@@ -17,7 +17,7 @@
 
 <p>
   <strong>School:</strong>
-  <%= @student.school %>
+  <%= School.find(@student.school).name %>
 </p>
 
 <%= link_to 'Posts', post_path(@student) %>

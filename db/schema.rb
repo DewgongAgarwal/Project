@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_09_213241) do
+ActiveRecord::Schema.define(version: 2019_06_14_191118) do
 
   create_table "a_types", force: :cascade do |t|
     t.string "name"
@@ -94,6 +94,7 @@ ActiveRecord::Schema.define(version: 2019_06_09_213241) do
     t.integer "poster_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "y"
   end
 
   create_table "post_data_table2s", force: :cascade do |t|
@@ -102,6 +103,7 @@ ActiveRecord::Schema.define(version: 2019_06_09_213241) do
     t.integer "poster_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "y"
   end
 
   create_table "post_data_table3s", force: :cascade do |t|
@@ -110,6 +112,7 @@ ActiveRecord::Schema.define(version: 2019_06_09_213241) do
     t.integer "poster_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "y"
   end
 
   create_table "post_data_table4s", force: :cascade do |t|
@@ -118,6 +121,7 @@ ActiveRecord::Schema.define(version: 2019_06_09_213241) do
     t.integer "poster_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "y"
   end
 
   create_table "post_data_table5s", force: :cascade do |t|
@@ -126,6 +130,7 @@ ActiveRecord::Schema.define(version: 2019_06_09_213241) do
     t.integer "poster_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "y"
   end
 
   create_table "post_table1", force: :cascade do |t|

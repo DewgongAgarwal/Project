@@ -10,11 +10,6 @@
   <%= @school.email %>
 </p>
 
-<p>
-  	<strong>Public Key:</strong>
-  	<%= @school.keys %>
-</p>
-
 <h3>My Teachers</h3>
 <table>
 <% @teachers.each do |t| %>
@@ -32,9 +27,7 @@
 </table>
 <br>
 
-<%= link_to 'Edit', edit_school_path(@school) %> |
-<%= link_to 'Student Posts', school_view_student_post_path(@school) %> |
-<%= link_to 'Teacher Posts', school_view_teacher_post_path(@school) %>
+
 <p onclick = "logout()"><%= link_to 'Log Out', schoollogout_url %></p>
 
 <script>

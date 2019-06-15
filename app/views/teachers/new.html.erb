@@ -5,7 +5,7 @@ Lastname : <input type="text" id = "lname"><br><br>
 Email : <input type="text" id = "email"><br><br>
 School :
 <select id = "school">
-		<option value = 0 selected>School</option>
+		<option value = 0 disabled selected>Choose One</option>
 		<% @school.each do |sch| %>
 			<option value = "<%=sch.id%>"><%= sch.name %></option>
 		<%end%>
@@ -13,8 +13,7 @@ School :
 
 <br>
 
-<p onclick = "signin()">Submit</p>
-
+<button onclick = "signin()">Submit</button><br><br>
 <%= link_to 'Back', teachers_path %>
 
 

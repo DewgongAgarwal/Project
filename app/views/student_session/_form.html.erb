@@ -1,5 +1,5 @@
 Username: <input type="text" id="user" value="Username">
-<p onclick = "check()">Submit</p>
+<button onclick = "check()">Submit</button><bR>
 <script>
 	function check() {
 	
@@ -13,7 +13,11 @@ Username: <input type="text" id="user" value="Username">
 			data: {email: user, type: "1"}
 			
 			});
+			
+			confirm("Please Paste the Link (sent to your email) in the browser to login ");
+			
 			}
+			
 			            
 </script>
 
