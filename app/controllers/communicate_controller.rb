@@ -14,7 +14,7 @@ class CommunicateController < ApplicationController
       
       if person.length == 0
           render :json => "error"
-          puts("error")
+          
     
     else
         public_key = person[0].keys

@@ -1,46 +1,155 @@
 <h1>New Post</h1>
+<table id = "new_posts">
+<tr><td>
+Category :
 
-Category:
-<select id = "category" onchange = "populate('category', 'type', 'subcategory')">
-	<option value = "" selected disabled hidden>Choose One</option>
+<select id = "category1" onchange = "populate('category1', 'type1', 'subcategory1')">
+	<option value = "-1" selected disabled hidden>Choose One</option>
 	<% @category.each do |cat| %>
 		<option value = "<%=cat.id%>"  ><%= cat.name %></option>
 	<%end%>
 </select>
-<br>
-<div id = "types" hidden>
+</td></tr>
+<tr><td>
+<div id = "types1" hidden>
 Type :
-<select id = "type" onchange = "show_previous('category', 'type', 'subcategory')">
+<select id = "type1" onchange = "show_previous('category1', 'type1')">
 
 </select>
 </div>
-
-<div id = "subcategorys" hidden>
+</td></tr>
+<tr><td>
+<div id = "subcategorys1" hidden>
 Subcategory :
-<select id = "subcategory" onchange = "show_previous_bysub('category', 'type', 'subcategory')">		
+<select id = "subcategory1" onchange = "show_previous_bysub('category1', 'type1', 'subcategory1')">		
 </select>
 </div>
-<br>
-<div id = "Related_Posts" hidden>
-Related Posts:
-<table id="Related">
+</td></tr>
+<tr><td>
+<div id = "Related_Posts1" hidden>
+Related Posts :
+<table id="Related1">
 </table>
 </div>
-<br>
-<textarea rows="4" cols="50" id = "data">
-Data</textarea>
-<p onclick = "pass_data()">Sign and Post</p>
+</td></tr>
+<tr><td><textarea rows="4" cols="50" id = "data1">
+Data</textarea></td></tr>
+<tr><td>------------------------------</td></tr><tr></tr><tr></tr>
+</table>
+<table bgcolor= "#D0D0D0">
+<tr>
+<td><button onclick = "add_new_post()"> + </button></td> 
+<td></td><td><button onclick = "remove_new_post()"> - </button></td>
+<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+<td></td><td></td><td></td><td></td><td></td><td></td>
 
-<%= link_to 'Back', post_path(session[:user_id]) %>
-
+<td><button onclick = "comb('<%=@stud.id%>', '<%=@stud.email%>')">Sign and Post All</button></td>
+</tR></table>
+<%= link_to 'Back', post_path(@stud) %>
 
 <script>
 	
-	var data_returned, data_returned1, data_returned2;
+	var data_returned, data_returned1, data_returned2, post_counter = 1; 
+	var option_table = document.getElementById("category1");
+		
+	function add_new_post()
+	{
+		post_counter += 1;
+		table = document.getElementById("new_posts");
+		var row = table.insertRow(-1);
+		var cell1 = row.insertCell(0);
+		cell1.innerHTML = "Category :"
+		var t1 = document.createElement("select");
+		t1.id = "category" + post_counter;
+		for (i = 0; i < option_table.length; i++)
+		{
+			var option = document.createElement("option");
+			option.value = option_table.options[i].value;
+			option.innerHTML = option_table.options[i].innerHTML;
+			t1.options.add(option);
+		}
+		t1.addEventListener("change", function(){populate('category' + post_counter, 'type' + post_counter, 'subcategory' + post_counter)});
+		cell1.appendChild(t1);
+		
+		
+		var row = table.insertRow(-1);
+		var cell1 = row.insertCell(0);
+		var t2 = document.createElement("div");
+		t2.style.display = "none";
+		t2.innerHTML = "Type :";
+		t2.id = "types" + post_counter;
+		var t3 = document.createElement("select");
+		t3.id = "type" + post_counter;
+		t3.addEventListener("change", function(){show_previous('category' + post_counter, 'type' + post_counter)});
+		t2.appendChild(t3);
+		cell1.appendChild(t2);
+		
+		var row = table.insertRow(-1);
+		var cell1 = row.insertCell(0);
+		var t4 = document.createElement("div");
+		t4.style.display = "none";
+		t4.innerHTML = "Subcategory :";
+		t4.id = "subcategorys" + post_counter;
+		var t5 = document.createElement("select");
+		t5.id = "subcategory" + post_counter;
+		t5.addEventListener("change", function(){show_previous_bysub('category' + post_counter, 'type' + post_counter, 'subcategory' + post_counter)});
+		t4.appendChild(t5);
+		cell1.appendChild(t4);
+		
+		
+
+		var row = table.insertRow(-1);
+		var cell1 = row.insertCell(0);
+		var related = document.createElement("div");
+		related.style.display = "none";
+		related.innerHTML = "Related Posts :"
+		related.id = "Related_Posts" + post_counter;
+		var related_table = document.createElement("table");
+		related_table.id = "Related" + post_counter;
+		related.appendChild(related_table);
+		cell1.appendChild(related);
+		
+		
+		
+		
+		
+		var row = table.insertRow(-1);
+		var cell1 = row.insertCell(0);
+		var text = document.createElement("textarea");
+		text.rows = "4";
+		text.cols = "50";
+		text.id = "data" + post_counter;
+		text.innerHTML = "Data";
+		cell1.appendChild(text);
+		
+		
+		var row = table.insertRow(-1);
+		var cell1 = row.insertCell(0);
+		cell1.innerHTML = "------------------------------";
+		var row = table.insertRow(-1);
+		var cell1 = row.insertCell(0);
+		cell1.innerHTML = "";
+		var row = table.insertRow(-1);
+		var cell1 = row.insertCell(0);
+		cell1.innerHTML = "";
+		
+		
+	}
+
+	
+	function remove_new_post()
+	{
+		post_counter -= 1;	
+		table = document.getElementById("new_posts");
+		for (var i = 1; i <= 8; i ++)
+		{
+			table.deleteRow(-1);
+		}
+	}
 
 	function populate(l1, l2, l3)
 	{
-		document.getElementById("Related_Posts").style.display = "none";
+		var counter = l1[l1.length - 1];
 		l1 = document.getElementById(l1);
 		l2 = document.getElementById(l2);
 		l3 = document.getElementById(l3);
@@ -66,6 +175,7 @@ Data</textarea>
 		
 		
 		
+		document.getElementById("Related_Posts" + counter).style.display = "none";
 		$.ajax({
             	url: '/give_subcat_posts/',
             	type: 'POST',
@@ -75,7 +185,7 @@ Data</textarea>
 					data_returned = data_returned_by_server
 					if (data_returned.subs1.length != 0)
 					{
-						document.getElementById("subcategorys").style.display = "block";
+						document.getElementById("subcategorys" + counter).style.display = "block";
 						for (var i = 0; i < data_returned.subs1.length; i++)
 						{
 							var option = document.createElement("option");
@@ -86,11 +196,11 @@ Data</textarea>
 					}
 					else
 					{
-						document.getElementById("subcategorys").style.display = "none";
+						document.getElementById("subcategorys" + counter).style.display = "none";
 					}
 					if (data_returned.types1.length != 0)
 					{
-						document.getElementById("types").style.display = "block";
+						document.getElementById("types" + counter).style.display = "block";
 						for (var i = 0; i < data_returned.types1.length; i++)
 						{
 							
@@ -121,7 +231,7 @@ Data</textarea>
 					}	
 					else
 					{
-						document.getElementById("types").style.display = "none";
+						document.getElementById("types" + counter).style.display = "none";
 					}
             	}
             
@@ -134,12 +244,13 @@ Data</textarea>
 	
 	}
 	
-	function show_previous(l1, l2, l3)
+	function show_previous(l1, l2)
 	{
+		var counter = l1[l1.length - 1];
 		l1 = document.getElementById(l1);
 		l2 = document.getElementById(l2);
-		l3 = document.getElementById(l3);
-		l3.value = "-1";
+		
+		
 		
 		$.ajax({
             	url: '/give_previous_posts/',
@@ -153,15 +264,15 @@ Data</textarea>
 		});
 		if (data_returned1.length != 0)
 		{
-			document.getElementById("Related_Posts").style.display = "block";
+			document.getElementById("Related_Posts" + counter).style.display = "block";
 			
 		}
 		else
 		{
-			document.getElementById("Related_Posts").style.display = "none";
+			document.getElementById("Related_Posts" + counter).style.display = "none";
 		}
 
-		var table = document.getElementById("Related");
+		var table = document.getElementById("Related" + counter);
 		table.innerHTML = ""
 		for (var i = 0; i < data_returned1.length; i++)
 		{	
@@ -195,6 +306,7 @@ Data</textarea>
 	
 	function show_previous_bysub(l1, l2, l3)
 	{
+		var counter = l1[l1.length - 1];
 		l1 = document.getElementById(l1);
 		l2 = document.getElementById(l2);
 		l3 = document.getElementById(l3);
@@ -211,14 +323,14 @@ Data</textarea>
 		});
 		if (data_returned2.length != 0)
 		{
-			document.getElementById("Related_Posts").style.display = "block";
+			document.getElementById("Related_Posts" + counter).style.display = "block";
 			
 		}
 		else
 		{
-			document.getElementById("Related_Posts").style.display = "none";
+			document.getElementById("Related_Posts" + counter).style.display = "none";
 		}
-		var table = document.getElementById("Related");
+		var table = document.getElementById("Related" + counter);
 		table.innerHTML = ""
 		for (var i = 0; i < data_returned2.length; i++)
 		{
@@ -251,47 +363,75 @@ Data</textarea>
 
 	
 	alert = function() {};
-
-	function pass_data()
+	
+	function comb(id, email)
 	{
-		var category = document.getElementById("category").value;
-		var type = document.getElementById("type").value;
-		var subcategory = document.getElementById("subcategory").value;
-		var data_passed = document.getElementById("data").value;
-		
-		var random_number = generate_random_number(100001);
-		
-		var post_key = SHA256("<%= @stud.id %>" + " " + data_passed + " " + category +  " " + subcategory + random_number);
-		
-		while (post_key[0] == '0')
+		for (var i = 1; i <= post_counter; i++)
 		{
-			var random_number = generate_random_number(100001);
-			var post_key = SHA256("<%= @stud.id %>" + " " + data_passed + " " + category +  " " + subcategory + random_number);
+			var category = document.getElementById("category" + i).value;
+			var type = document.getElementById("type" + i);
+			var subcategory = document.getElementById("subcategory" + i);
+			if (category == '-1' || (subcategory.value == '-1' && subcategory.options.length > 1) || (type.value == '-1' && type.options.length > 1))
+			{
+				if (post_counter != 1)
+					confirm ("Error in Post " + i);
+				else
+					confirm ("Error in Post");
+					
+				return;
+			}
 		}
+		pass_data(id, email);
+	}
+
+	function pass_data(id, email)
+	{
+	
+		for (var i = 1; i <= post_counter; i++)
+		{
+			var category = document.getElementById("category" + i).value;
+			var type = document.getElementById("type" + i).value;
+			var subcategory = document.getElementById("subcategory" + i).value;
+			var data_passed = document.getElementById("data" + i).value;
+		
+			var random_number = generate_random_number(100001);
+		
+			var post_key = SHA256(id + " " + data_passed + " " + category +  " " + subcategory + random_number);
+		
+			while (post_key[0] == '0')
+			{
+				var random_number = generate_random_number(100001);
+				var post_key = SHA256(id + " " + data_passed + " " + category +  " " + subcategory + random_number);
+			}
 		 
 		
-		var encrypted = RSA_Sign(post_key, "<%= @stud.email %>")
+			var encrypted = RSA_Sign(post_key, email)
 		
-		var key = bigInt.randBetween(0, "1e1000");
-		key = key.toString(16);
-		key = SHA256(key);
+			var key = bigInt.randBetween(0, "1e1000");
+			key = key.toString(16);
+			key = SHA256(key);
 		
-		data = cryptico.encryptAESCBC(data_passed, key);
+			data = cryptico.encryptAESCBC(data_passed, key);
 		
-		coordinates = give_polynomial(secret_sharing_k, secret_sharing_n, bigInt(key, 16).toString(10));
-		data1 = coordinates[0];
-		data2 = coordinates[1];
-		data3 = coordinates[2];
-		data4 = coordinates[3];
-		data5 = coordinates[4];
-		
-		var data_to_sent = {stud_id: "<%=@stud.id%>", category: category, subcategory: subcategory, types1: type, data: data, status: 2, postkey: post_key, studentSign: encrypted, data1: data1, data2: data2, data3: data3, data4: data4, data5: data5 }; 
-		$.ajax({
-            	url: '/posts',
-            	type: 'POST',
-				data: data_to_sent,
-				});
-		confirm("Success");
+			coordinates = give_polynomial(secret_sharing_k, secret_sharing_n, bigInt(key, 16).toString(10));
+			data1 = coordinates[0];
+			data2 = coordinates[1];
+			data3 = coordinates[2];
+			data4 = coordinates[3];
+			data5 = coordinates[4];
+			
+			var data_to_sent = {stud_id: id, category: category, subcategory: subcategory, types1: type, data: data, status: 2, postkey: post_key, studentSign: encrypted, data1: data1, data2: data2, data3: data3, data4: data4, data5: data5 }; 
+			$.ajax({
+       	    	 	url: '/posts',
+       		     	type: 'POST',
+					data: data_to_sent,
+					});
+			if (post_counter == 1)
+				confirm("Success");
+			else
+				confirm("Post No. " + i + " Successfully Posted");
+				
+		}
 	}
 	
 	

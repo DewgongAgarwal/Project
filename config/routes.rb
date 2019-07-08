@@ -28,17 +28,9 @@ Rails.application.routes.draw do
       
   end
   
-  controller :checker do
-      get '/checker/:id/:id2/:id3/:id4' => :index, as: :checker
-    end
   
   controller :communicate do
       post '/communicate' => :index
-  end
-  
-  controller :check do
-      get'/check/:id/:id2/:id3' => :index, as: :check
-      
   end
   
   controller :students do
