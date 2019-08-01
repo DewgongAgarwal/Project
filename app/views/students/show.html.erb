@@ -20,10 +20,14 @@
   <%= School.find(@student.school).name %>
 </p>
 
-<%= link_to 'Posts', post_path(@student) %>
+<form method="post" action="/my_posts_student" class="inline">
+  <input type="hidden" name="id" value="<%=@student.id%>">
+  <button type="submit" name="submit" value="Back" class="link-button">My Posts</button>
+</form>
 <p onclick = "logout()"><%= link_to 'Log Out', studentlogout_url %></p>
 
 <script>
+
 	function logout()
 	{
 		sessionStorage.clear();

@@ -38,7 +38,12 @@ Data</textarea></td></tr>
 
 <td><button onclick = "comb('<%=@teacher.id%>', '<%=@teacher.email%>')">Sign and Post All</button></td>
 </tR></table>
-<%= link_to 'Back', teacher_post_path(@teacher) %>
+
+<form method="post" action="/my_posts_teacher" class="inline">
+  <input type="hidden" name="id" value="<%=@teacher.id%>">
+  <button type="submit" name="submit" value="Back" class="link-button">Back</button>
+</form>
+
 <script>
 	var post_counter = 1;
 	alert = function(){};

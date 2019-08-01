@@ -45,7 +45,11 @@ Data</textarea></td></tr>
 
 <td><button onclick = "comb('<%=@stud.id%>', '<%=@stud.email%>')">Sign and Post All</button></td>
 </tR></table>
-<%= link_to 'Back', post_path(@stud) %>
+
+<form method="post" action="/my_posts_student" class="inline">
+  <input type="hidden" name="id" value="<%=@stud.id%>">
+  <button type="submit" name="submit" value="Back" class="link-button">Back</button>
+</form>
 
 <script>
 	
@@ -430,7 +434,7 @@ Data</textarea></td></tr>
 				confirm("Success");
 			else
 				confirm("Post No. " + i + " Successfully Posted");
-				
+			
 		}
 	}
 	

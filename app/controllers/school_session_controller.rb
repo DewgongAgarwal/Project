@@ -10,7 +10,7 @@ class SchoolSessionController < ApplicationController
         $teacher_islogged_in = false
         $school_islogged_in = true
         $logger_id = sch_user.id
-        redirect_to school_path(sch_user.id)
+        
     end
     
     def destroy

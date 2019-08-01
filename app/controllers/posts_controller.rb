@@ -1,45 +1,38 @@
 class PostsController < ApplicationController
     before_action :set_post, only: [:show, :new, :give_previous, :give_previous_bysub]
-    skip_before_action :verify_authenticity_token, only: [:set_id, :create, :give_subcategory, :give_previous, :give_categories, :give_previous_bysub]
+    skip_before_action :verify_authenticity_token, only: [:set_id, :create, :give_subcategory, :give_previous, :give_categories, :give_previous_bysub, :new, :show]
 
   def show
-      if $student_islogged_in and not $teacher_islogged_in and not $school_islogged_in and $logger_id == @stud.id
-          @categories = Category.all
-          @profile = Profile.all
-          @family = Family.all
-          @education = Education.all
-          @testing = Testing.all
-          @activities = Activity.all
-          @type = Type.all
-          @testing_type = TType.all
-          @activity_type = AType.all
-          @other = Post.where(stud_id: @stud, Category: 8)
-        else
-            redirect_to studentlogin_url
-      end
+      @categories = Category.all
+      @profile = Profile.all
+      @family = Family.all
+      @education = Education.all
+      @testing = Testing.all
+      @activities = Activity.all
+      @type = Type.all
+      @testing_type = TType.all
+      @activity_type = AType.all
+      @other = Post.where(stud_id: @stud, Category: 8)
   end
 
   # GET /posts/new
   def new
       @category = Category.all
-      if $student_islogged_in and not $teacher_islogged_in and not $school_islogged_in and $logger_id == @stud.id
           
-          account_posts = Post.where(category: 1, stud_id: @stud.id)
-          if not account_posts.length == 0
-              if account_posts.last.status == 2
-                  redirect_to post_path(@stud), notice: 'Account not Verified Yet'
-                elsif not account_posts.last.status == 3
-                    @category = Category.where(id: 1)
-                end
-           
-          else
-            @category = Category.where(id: 1)
-            
-          
-          end
-    else
-    redirect_to studentlogin_url
-  end
+      account_posts = Post.where(category: 1, stud_id: @stud.id)
+      if not account_posts.length == 0
+          if account_posts.last.status == 2
+              redirect_to post_path(@stud), notice: 'Account not Verified Yet'
+            elsif not account_posts.last.status == 3
+                @category = Category.where(id: 1)
+            end
+       
+      else
+        @category = Category.where(id: 1)
+        
+      
+      end
+
     
   end
 
@@ -56,7 +49,7 @@ class PostsController < ApplicationController
         post.studentSign = params[:studentSign]
         
         
-    if $student_islogged_in and not $teacher_islogged_in and not $school_islogged_in and $logger_id == post.stud_id
+
         check_post = Post.where(stud_id: post.stud_id, category: post.category, subcategory: post.subcategory, types1: post.types1, status: [2,3,4])
         respond_to do |format|
           if check_post.length == 0 and post.save
@@ -98,9 +91,7 @@ class PostsController < ApplicationController
           
           end
         end
-    else
-        redirect_to studentlogin_url
-    end
+    
     
   end
 

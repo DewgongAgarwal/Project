@@ -1,7 +1,11 @@
 <h3>Authenticating ... </h3>
 
 
-<script>	
+<script>
+	window.onload = show_all();
+
+	function show_all()
+	{	
 		var user = "<%=@user.email%>"
 		var type = <%= @type %>
 		var data = {username: user, type: type};
@@ -32,13 +36,22 @@
             });
             
             var url = "";
+            var next = "";
             if (type == 1)
-            	url = '/studentlogin'
+            {
+            	url = '/studentlogin';
+            	next = '/show_student';
+            }	
             else if (type == 2)
-            	url = '/teacherlogin'
+            {
+            	url = '/teacherlogin';
+            	next = '/show_teacher';
+            }
             else
+            {
             	url = '/schoollogin'
-            
+            	next = '/show_school';
+            }
             
             x1 = bigInt(data_returned).modPow(bigInt(sessionStorage.getItem(user+"d")),bigInt(sessionStorage.getItem(user+"n")))
             var x2 = x1.toString(16);
@@ -60,14 +73,30 @@
 				data: data,
 				async: false,
         		});
+        		redirect_to_page(next, user);
         	}
         	else
         	{
         		alert("Incorrect Username");
         		location.reload(false);
         	}
+        }
         
-        
+        function redirect_to_page(url)
+        {
+        	const form = document.createElement('form');
+        	form.method = 'post';
+        	form.action = url;
+        	const hiddenField = document.createElement('input');
+      		hiddenField.type = 'hidden';
+      		hiddenField.name = 'id';
+      		hiddenField.value = "<%= @user.id %>"
+      		form.appendChild(hiddenField); 
+      		document.body.appendChild(form);
+  			form.submit();
+        }
+        	
+        	
             
 </script>
 

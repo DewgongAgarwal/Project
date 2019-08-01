@@ -3,9 +3,7 @@ class TeacherViewStudentPostsController < ApplicationController
     skip_before_action :verify_authenticity_token
     def show
         @student = Student.find(params[:stud_id].to_i)
-
     end
-    
     
     def give_student_data
         

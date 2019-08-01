@@ -1,22 +1,15 @@
 class StudentsController < ApplicationController
   before_action :set_student, only: [:show, :edit, :update, :destroy]
+  
   skip_before_action :verify_authenticity_token
   # GET /students
   # GET /students.json
   def index
-      $student_islogged_in = false
-      $teacher_islogged_in = false
-      $school_islogged_in = false
-      $logger_id = 0
   end
 
   # GET /students/1
   # GET /students/1.json
   def show
-      if $student_islogged_in and not $teacher_islogged_in and not $school_islogged_in and $logger_id == @student.id
-         else
-         redirect_to studentlogin_url
-        end
   end
 
   def public_key
@@ -43,20 +36,14 @@ class StudentsController < ApplicationController
     stud = Student.where(email: student.email)
     teach = Teacher.where(email: student.email)
     sch = School.where(email: student.email)
+    if stud.length == 0 and teach.length == 0 && sch.length == 0
+        student.save
+        redirect_to students_path
         
-        if stud.length == 0 and teach.length == 0 && sch.length == 0
-            if student.save
-                $student_islogged_in = true
-                $teacher_islogged_in = false
-                $school_islogged_in = false
-                $logger_id = student.id
-                redirect_to student, notice: 'Student was successfully created.'
-            else
-                redirect_to students_path
-            end
-            else
-                redirect_to students_path, notice: 'User Exists'
-        end
+        else
+        redirect_to students_path, notice: 'User Exists'
+    end
+
   end
 
 

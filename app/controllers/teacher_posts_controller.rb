@@ -1,39 +1,27 @@
 class TeacherPostsController < ApplicationController
     before_action :set_teacher_post, only: [:show, :new, :give_previous_bysub]
-    skip_before_action :verify_authenticity_token, only: [:set_id, :create,:give_previous_bysub,:give_subcategory]
+    skip_before_action :verify_authenticity_token, only: [:set_id, :create,:give_previous_bysub,:give_subcategory, :new, :show]
 
   def show
-      
-      if session[:user_id] == params[:id].to_i
-        @categories = Category.where(id: [1, 2])
-        @profile = Profile.all
-        
-        else
-            redirect_to root_path
-    end
-
+    @categories = Category.where(id: [1, 2])
+    @profile = Profile.all
   end
 
   # GET /teacher_posts/new
   def new
     @category = Category.where(id:[1,2])
-    if not $student_islogged_in and $teacher_islogged_in and not $school_islogged_in and $logger_id == @teacher.id
-        
-        account_posts = TeacherPost.where(category: 1, teacher_id: @teacher.id)
-        if not account_posts.length == 0
-            if account_posts.last.status == 2
-                redirect_to teacher_post_path(@teacher), notice: 'Account not Verified Yet'
-                elsif not account_posts.last.status == 3
-                @category = Category.where(id: 1)
-            end
-            
-            else
+    account_posts = TeacherPost.where(category: 1, teacher_id: @teacher.id)
+    
+    if not account_posts.length == 0
+        if account_posts.last.status == 2
+            redirect_to teacher_post_path(@teacher), notice: 'Account not Verified Yet'
+            elsif not account_posts.last.status == 3
             @category = Category.where(id: 1)
-            
-            
         end
+        
         else
-        redirect_to teacherlogin_url
+        @category = Category.where(id: 1)
+        
     end
 
     @teacher_post = TeacherPost.new

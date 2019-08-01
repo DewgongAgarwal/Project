@@ -1,10 +1,16 @@
 <p id="notice"><%= notice %></p>
-<%= link_to 'New Post', post_new_path(@stud.id) %>
+<form method="post" action="/post/new" class="inline">
+  <input type="hidden" name="id" value="<%=@stud.id%>">
+  <button type="submit" name="submit" value="New Post" class="link-button">New Post</button>
+</form>
 
 <table id = "Posts"></table>
 
 
-<%= link_to 'Back',student_path(@stud) %>
+<form method="post" action="/show_student" class="inline">
+  <input type="hidden" name="id" value="<%=@stud.id%>">
+  <button type="submit" name="submit" value="Back" class="link-button">Back</button>
+</form>
 
 
 <script>

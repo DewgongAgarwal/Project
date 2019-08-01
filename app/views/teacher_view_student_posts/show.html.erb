@@ -16,7 +16,10 @@
 <br>
 <Br>
 
-<%= link_to "Back", teacher_path(@teacher) %>
+<form method="post" action="/show_student" class="inline">
+  <input type="hidden" name="id" value="<%=@teacher.id%>">
+  <button type="submit" name="submit" value="Back" class="link-button">Back</button>
+</form>
 <script>
 
 alert = function(){};
