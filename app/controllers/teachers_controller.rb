@@ -12,11 +12,16 @@ class TeachersController < ApplicationController
   # GET /teachers/1
   # GET /teachers/1.json
   def show
+      @students = Student.where(school: @teacher.school)
   end
 
   def public_key
       render :json => Teacher.find(params[:id].to_i)
   end
+  
+  def public_key_by_email
+      render :json => Teacher.find_by(email: params[:email]).keys
+    end
   
   # GET /teachers/new
   def new

@@ -14,10 +14,14 @@ class SchoolsController < ApplicationController
       @teachers = Teacher.where(school: @school.id)      
   end
 
+  def public_key_by_email
+      render :json => School.find_by(email: params[:email]).keys
+      end
+  
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_school
       @school = School.find(params[:id])
     end
-
+    
 end

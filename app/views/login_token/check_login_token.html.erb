@@ -9,13 +9,43 @@
 		var user = "<%=@user.email%>"
 		var type = <%= @type %>
 		var data = {username: user, type: type};
-		var x1;
-            
-        var key = cryptico.generateRSAKey(user, 1024);
-        var public_key = bigInt(key.n).toString();
-        var result;
-        sessionStorage.setItem(user+"d", key.d);
-        sessionStorage.setItem(user+"n", key.n);	    
+		var x1, public_key, private_key;
+		var url = "";
+        var next = "";
+        if (type == 1)
+    	{
+        	url = '/studentlogin';
+        	next = '/show_student';
+        }	
+        else if (type == 2)
+    	{
+        	url = '/teacherlogin';
+        	next = '/show_teacher';
+    	}
+        else
+	    {
+           	url = '/schoollogin'
+           	next = '/show_school';
+        }
+        $.ajax({
+            url: next + '_public_key',
+            type: 'POST',
+            dataType: 'text',
+			data: {email: user},
+			async: false,
+			success: function (data_returned_by_server) {
+				public_key = data_returned_by_server;
+            	
+        	},
+        	error: function (result) {
+            	alert('error');
+        	}
+			
+            });
+        
+    	private_key = prompt("Enter Private Key", "Private Key");
+        sessionStorage.setItem(user+"d", private_key);
+        sessionStorage.setItem(user+"n", public_key);	    
            
             
 		var data_returned;
@@ -35,49 +65,40 @@
 			
             });
             
-            var url = "";
-            var next = "";
-            if (type == 1)
-            {
-            	url = '/studentlogin';
-            	next = '/show_student';
-            }	
-            else if (type == 2)
-            {
-            	url = '/teacherlogin';
-            	next = '/show_teacher';
-            }
-            else
-            {
-            	url = '/schoollogin'
-            	next = '/show_school';
-            }
             
-            x1 = bigInt(data_returned).modPow(bigInt(sessionStorage.getItem(user+"d")),bigInt(sessionStorage.getItem(user+"n")))
-            var x2 = x1.toString(16);
-			var y2 = x2.substring(64);
-			x2 = x2.substring(0,64);
-			var r1 = bigInt(y2,16).xor(bigInt(SHA256(x2),16)).toString(16);
-			var message = bigInt(x2,16).xor(bigInt(SHA256(r1),16));
-			var comm_key_padded = message.toString(16);			
-			var comm_key = comm_key_padded.substring(0, 32) + comm_key_padded.substring(42);
-			var checker_message = comm_key_padded.substring(32, 42);
-			if (checker_message == "1001001001")
-			{
-				sessionStorage.setItem(user + "comm_key", comm_key);
-				var id;
-				data = {email: user};
-				$.ajax({
-            	url: url,
-            	type: 'POST',
-				data: data,
-				async: false,
-        		});
-        		redirect_to_page(next, user);
+            try
+            {
+            	x1 = bigInt(data_returned).modPow(bigInt(sessionStorage.getItem(user+"d")),bigInt(sessionStorage.getItem(user+"n")))
+           	 	var x2 = x1.toString(16);
+				var y2 = x2.substring(64);
+				x2 = x2.substring(0,64);
+				var r1 = bigInt(y2,16).xor(bigInt(SHA256(x2),16)).toString(16);
+				var message = bigInt(x2,16).xor(bigInt(SHA256(r1),16));
+				var comm_key_padded = message.toString(16);			
+				var comm_key = comm_key_padded.substring(0, 32) + comm_key_padded.substring(42);
+				var checker_message = comm_key_padded.substring(32, 42);
+				if (checker_message == "1001001001")
+				{
+					sessionStorage.setItem(user + "comm_key", comm_key);
+					var id;
+					data = {email: user};
+					$.ajax({
+ 	    	       	url: url,
+    	        	type: 'POST',
+					data: data,
+					async: false,
+        			});
+        			redirect_to_page(next, user);
+        		}
+        		else
+        		{
+        			alert("Authentication Failed");
+        			location.reload(false);
+        		}
         	}
-        	else
+        	catch(err)
         	{
-        		alert("Incorrect Username");
+        		alert("Authentication Failed");
         		location.reload(false);
         	}
         }

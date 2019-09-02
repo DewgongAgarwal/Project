@@ -35,9 +35,9 @@ School :
 			alert ("Choose one School");
 		else
 		{
-			var key = cryptico.generateRSAKey(email, 1024);
-			sessionStorage.setItem(email+"d", key.d);
-			sessionStorage.setItem(email+"n", key.n);
+			var key = cryptico.generateRSAKey(email + bigInt.randBetween("-1e100", "1e100").toString(10), 1024);
+			alert("The Next Message will Display your Private Key. Please keep it safe otherwise you would not be able to log into the platform. There is no other way to recover the private key. Do not store it only on your computer. Make sure to keep backups.");
+			alert("This is your Private Key: \n" + bigInt(key.d);
 			var data = {firstname: firstname, lastname: lastname, email: email, school: school + "", keys: bigInt(key.n).toString()};
 			$.ajax({
             		url: '/students',
@@ -45,46 +45,6 @@ School :
 					data: data,
 					async: false,
 					});
-			give_commkey(email);
 		}
 	}
-	
-	function give_commkey(email)
-	{          
-    var data = {username: email, type: 1};  
-    var data_returned;      
-	$.ajax({
-            url: '/communicate',
-            type: 'POST',
-            dataType: 'text',
-			data: data,
-			async: false,
-			success: function (data_returned_by_server) {
-				data_returned = data_returned_by_server;
-            	
-        	},
-        	error: function (result) {
-            	alert('error');
-        	}
-			
-            });
-            
-        var x1 = bigInt(data_returned).modPow(bigInt(sessionStorage.getItem(email+"d")), bigInt(sessionStorage.getItem(email+"n")));
-        var x2 = x1.toString(16);
-		var y2 = x2.substring(64);
-		x2 = x2.substring(0,64);
-		var r1 = bigInt(y2,16).xor(bigInt(SHA256(x2),16)).toString(16);
-		var message = bigInt(x2,16).xor(bigInt(SHA256(r1),16));
-		var comm_key_padded = message.toString(16);			
-		var comm_key = comm_key_padded.substring(0, 32) + comm_key_padded.substring(42);
-		var checker_message = comm_key_padded.substring(32, 42);
-        if (checker_message == "1001001001")
-		{
-			sessionStorage.setItem(email + "comm_key", comm_key);
-		}
-		
-			
-            
-	}
-	
 </script>

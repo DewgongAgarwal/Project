@@ -5,16 +5,21 @@ Rails.application.routes.draw do
   resources :schools, :only => [:index]
   controller :schools do
       post '/show_school' => :show
+      post '/show_school_public_key' => :public_key_by_email, as: :school_public_key_by_email
   end
   
   resources :teachers, :except => [:edit, :update, :destroy, :show]
   controller :teachers do
       post '/show_teacher' => :show
+      post 'give_teacher_public_key' => :public_key, as: :teacher_public_key
+      post '/show_teacher_public_key' => :public_key_by_email, as: :teacher_public_key_by_email
   end
   
   resources :students, :except => [:edit, :update, :destroy, :show]
   controller :students do
       post '/show_student' => :show
+      post '/show_student_public_key' => :public_key_by_email, as: :student_public_key_by_email
+      post 'give_student_public_key' => :public_key, as: :student_public_key
     end
   
   controller :login_token do
@@ -29,13 +34,6 @@ Rails.application.routes.draw do
   
   controller :communicate do
       post '/communicate' => :index
-  end
-  
-  controller :students do
-      post 'give_student_public_key' => :public_key, as: :student_public_key
-  end
-  controller :teachers do
-      post 'give_teacher_public_key' => :public_key, as: :teacher_public_key
   end
   
   controller :student_session do

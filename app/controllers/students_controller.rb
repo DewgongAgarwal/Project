@@ -16,6 +16,10 @@ class StudentsController < ApplicationController
       render :json=> Student.find(params[:id].to_i)
     end
   
+  def public_key_by_email
+      render :json=> (Student.find_by(email: params[:email])).keys
+      end
+  
   # GET /students/new
   def new
     @student = Student.new
